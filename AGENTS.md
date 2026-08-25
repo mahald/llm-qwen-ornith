@@ -1,14 +1,14 @@
 # Agent notes for ~/LLM
 
-One native **buun-llama-cpp** image, two models, one GPU, one port. Keep the folder small.
+One native **buun-llama-cpp** image, three models, one GPU, one port. Keep the folder small.
 
 ## Layout
 
 | Path | Role |
 |---|---|
 | `docker-compose.yml` | Shared stack (image, `gpus: all`, port 8080, CUDA require) |
-| `qwen.yml` / `ornith.yml` | Model overlays: `container_name`, `command`, `x-download` |
-| `llm` | One helper: `qwen` / `ornith` / `stop` / `build` / `download` |
+| `qwen.yml` / `qwen-uncensored.yml` / `ornith.yml` | Model overlays: `container_name`, `command`, `x-download` |
+| `llm` | One helper: `qwen` / `qwen-uncensored` / `ornith` / `stop` / `build` / `download` |
 | `Dockerfile` | Native CUDA 13.3.1 image `buun-llama:native` |
 | `models/` | GGUFs |
 | `scripts/` | Benchmarks only (`compare.sh`, `speed-results/`) |
@@ -19,13 +19,14 @@ Do not add BeeLlama, extra Dockerfiles, `params.env`, `common.sh`, or extra star
 
 ```bash
 ./llm qwen
+./llm qwen-uncensored
 ./llm ornith
 ./llm stop
 ./llm build
 ./llm download
 ```
 
-Never run both models at once (24 GB card). GPU access is `--gpus all` via NVIDIA Container Toolkit. Do **not** bind-mount host `libcuda.so`.
+Never run more than one model at once (24 GB card). GPU access is `--gpus all` via NVIDIA Container Toolkit. Do **not** bind-mount host `libcuda.so`.
 
 Host driver is CUDA **13.2**. The image is CUDA **13.3.1**, so set `NVIDIA_REQUIRE_CUDA=cuda>=13.2` (already in the image and compose). Smoke test:
 
@@ -84,7 +85,7 @@ command:
 
 Put flag and value on the same line inside the `>` block (`-m /models/...`, `--fit-target 1024`). One flag per line. No quotes unless a value has spaces.
 
-`ornith.yml` is the same shape (`container_name: ornith`, `-np 2`, Ornith GGUF / alias).
+`ornith.yml` is the same shape (`container_name: ornith`, `-np 2`, Ornith GGUF / alias). `qwen-uncensored.yml` is the Huihui abliterated NVFP4 sibling (`container_name: qwen-uncensored`, alias `qwen3.8-27b-uncensored`).
 
 ## Serving rules
 

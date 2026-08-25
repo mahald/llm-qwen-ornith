@@ -1,5 +1,6 @@
-# Shared stack. Model-specific command lives in qwen.yml / ornith.yml:
+# Shared stack. Model-specific command lives in the overlays:
 #   ./llm qwen
+#   ./llm qwen-uncensored
 #   ./llm ornith
 #
 # One service, one GPU, one port. Switching overlays recreates the container.

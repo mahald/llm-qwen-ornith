@@ -3,6 +3,7 @@ models
 scripts
 llm
 qwen.yml
+qwen-uncensored.yml
 ornith.yml
 docker-compose.yml
 README.md
