@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One helper: ./llm qwen | qwen-uncensored | ornith | stop | build | download
+# One helper: ./llm qwen | qwen-uncensored | superqwen | ornith | stop | build | download
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -7,16 +7,16 @@ IMAGE=buun-llama:native
 COMPOSE=(docker compose -f docker-compose.yml)
 
 usage() {
-    echo "usage: $0 qwen | qwen-uncensored | ornith | stop | build | download" >&2
+    echo "usage: $0 qwen | qwen-uncensored | superqwen | ornith | stop | build | download" >&2
     exit 1
 }
 
 down_all() {
     local y
-    for y in qwen.yml qwen-uncensored.yml ornith.yml; do
+    for y in qwen.yml qwen-uncensored.yml superqwen.yml ornith.yml; do
         "${COMPOSE[@]}" -f "$y" down --remove-orphans --timeout 20 >/dev/null 2>&1 || true
     done
-    docker rm -f qwen qwen-uncensored ornith llm-compare >/dev/null 2>&1 || true
+    docker rm -f qwen qwen-uncensored superqwen ornith llm-compare >/dev/null 2>&1 || true
 }
 
 up_model() {
@@ -119,6 +119,7 @@ do_download() {
     mkdir -p models
     check_one qwen.yml
     check_one qwen-uncensored.yml
+    check_one superqwen.yml
     check_one ornith.yml
     echo
     echo "Done. models/ is ready."
@@ -128,6 +129,7 @@ cmd="${1:-}"
 case "$cmd" in
     qwen)              up_model qwen.yml ;;
     qwen-uncensored)   up_model qwen-uncensored.yml ;;
+    superqwen)         up_model superqwen.yml ;;
     ornith)            up_model ornith.yml ;;
     stop)
         down_all

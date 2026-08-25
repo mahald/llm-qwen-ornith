@@ -4,6 +4,7 @@ scripts
 llm
 qwen.yml
 qwen-uncensored.yml
+superqwen.yml
 ornith.yml
 docker-compose.yml
 README.md

@@ -1,6 +1,7 @@
 # Shared stack. Model-specific command lives in the overlays:
 #   ./llm qwen
 #   ./llm qwen-uncensored
+#   ./llm superqwen
 #   ./llm ornith
 #
 # One service, one GPU, one port. Switching overlays recreates the container.

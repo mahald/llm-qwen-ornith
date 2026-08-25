@@ -1,0 +1,35 @@
+# SuperQwen3.8-27B abliterated Q4_K_M — overlay for docker-compose.yml
+#
+# Text-only target GGUF. MTP draft and mmproj are separate files in the
+# same HF repo; we do not download or load them. Same serving shape as
+# qwen.yml: MTP OFF, --no-mmproj, 3 slots, --fit-target 1024.
+
+x-download:
+  repo: Jiunsong/SuperQwen3.8-27b-abliterated-GGUF
+  file: SuperQwen3.8-27b-abliterated-Q4_K_M.gguf
+  sha256: 692291d35fa3b5380f66486fe425ca715151c8b6136f07d3c5adb5ec179efd69
+
+services:
+  llm:
+    container_name: superqwen
+    command: >
+      -m /models/SuperQwen3.8-27b-abliterated-Q4_K_M.gguf
+      -a superqwen3.8-27b
+      --host 0.0.0.0
+      --port 8080
+      -ngl 99
+      -np 3
+      -c 262144
+      -ct vbr
+      --kv-unified
+      --vbr-vram auto
+      --fit on
+      --fit-target 1024
+      --no-mmproj
+      --temp 0.6
+      --top-p 0.95
+      --top-k 20
+      --min-p 0.0
+      --presence-penalty 0.0
+      --repeat-penalty 1.0
+      -lv 3

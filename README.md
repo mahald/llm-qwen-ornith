@@ -1,12 +1,12 @@
 # Local LLMs — buun-llama-cpp on the RTX 5090 Laptop (24 GB)
 
-One image, three models, one port. Runs on the **NVIDIA GeForce RTX 5090 Laptop** (Blackwell `sm_120`, **24 GB VRAM**). The Intel Arrow Lake iGPU drives the desktop, so almost all 24 GB on the 5090 is available for inference.
+One image, four models, one port. Runs on the **NVIDIA GeForce RTX 5090 Laptop** (Blackwell `sm_120`, **24 GB VRAM**). The Intel Arrow Lake iGPU drives the desktop, so almost all 24 GB on the 5090 is available for inference.
 
 Compose shows what is running:
 
 ```bash
 docker compose ls
-docker compose -f docker-compose.yml -f qwen.yml ps    # or qwen-uncensored.yml / ornith.yml
+docker compose -f docker-compose.yml -f qwen.yml ps    # or qwen-uncensored.yml / superqwen.yml / ornith.yml
 ```
 
 - **GPU:** RTX 5090 Laptop, 24 GB
@@ -21,7 +21,7 @@ The default is **Qwen3.8-27B NVFP4 HIGH** (`./llm qwen`). In the [esatapedico fa
 
 On **HIGH the LM head (`output.weight`) stays BF16** — the same type as in the source conversion (`ORIG`), so it is left unchanged. The LM head maps hidden states to the vocabulary; leaving it unquantized is the biggest quality lever on this ladder. HIGH should therefore be the highest-quality variant that still runs well on **24 GB**: 17.57 GB weights, Blackwell NVFP4, and enough leftover VRAM for the VBR KV cache.
 
-Ornith (35B-A3B MoE) is the fast second model (~200 t/s decode); Qwen HIGH is the accurate one. `./llm qwen-uncensored` is the Huihui abliterated NVFP4 sibling — same 27B dense layout, refusals stripped.
+Ornith (35B-A3B MoE) is the fast second model (~200 t/s decode); Qwen HIGH is the accurate one. `./llm qwen-uncensored` is the Huihui abliterated NVFP4 sibling — same 27B dense layout, refusals stripped. `./llm superqwen` is SuperQwen3.8-27B abliterated **Q4_K_M** (text-only target; MTP draft and mmproj stay on Hugging Face).
 
 ## Quick start
 
@@ -31,12 +31,13 @@ cd ~/LLM
 ./llm build
 ./llm qwen              # NVFP4 HIGH on :8080
 ./llm qwen-uncensored   # Huihui abliterated NVFP4 on :8080
+./llm superqwen         # SuperQwen abliterated Q4_K_M on :8080
 ./llm ornith            # Ornith on :8080
 ./llm stop
 ```
 
 - API: `http://127.0.0.1:8080/v1` (no key) · UI: http://127.0.0.1:8080
-- Names: `qwen3.8-27b` / `qwen3.8-27b-uncensored` / `ornith-1.5-35b`
+- Names: `qwen3.8-27b` / `qwen3.8-27b-uncensored` / `superqwen3.8-27b` / `ornith-1.5-35b`
 
 Both think. The answer is in `message.content`, reasoning in `message.reasoning_content`.
 
@@ -45,20 +46,20 @@ Both think. The answer is in `message.content`, reasoning in `message.reasoning_
 | | |
 |---|---|
 | `docker-compose.yml` | Image, GPU (`--gpus all`), port 8080, `NVIDIA_REQUIRE_CUDA` |
-| `qwen.yml` / `qwen-uncensored.yml` / `ornith.yml` | Model, slots, sampling, VBR — **tune here** |
-| `llm` | `qwen` / `qwen-uncensored` / `ornith` / `stop` / `build` / `download` |
+| `qwen.yml` / `qwen-uncensored.yml` / `superqwen.yml` / `ornith.yml` | Model, slots, sampling, VBR — **tune here** |
+| `llm` | `qwen` / `qwen-uncensored` / `superqwen` / `ornith` / `stop` / `build` / `download` |
 | `Dockerfile` | Native build, CUDA **13.3.1** |
 | `models/` | The GGUFs (not in git — `./llm download`) |
 | `scripts/` | Benchmarks (`compare.sh`, `speed-results/`) |
 
 ## Models
 
-| | Qwen NVFP4 **HIGH** | Qwen uncensored | Ornith |
-|---|---|---|---|
-| File | `Qwen3.8-27B-NVFP4-MTP-HIGH.gguf` (17.57 GB) | `Qwen3.8-27B-huihui-NVFP4.gguf` (19.65 GB) | `Ornith-1.5-35B-A3B-NVFP4-Q5K-mtp.gguf` (20.2 GB) |
-| | NVFP4 backbone, **LM head BF16** | Huihui abliterated NVFP4 | 35B-A3B MoE NVFP4 |
-| Slots | 3 | 3 | 2 |
-| Source | [esatapedico/…](https://huggingface.co/esatapedico/Qwen3.8-27B-NVFP4-MTP-GGUF) | [renketong/…](https://huggingface.co/renketong/Huihui-Qwen3.8-27B-abliterated-NVFP4-GGUF) | [Avifenesh/…](https://huggingface.co/Avifenesh/Ornith-1.5-35B-A3B-NVFP4-MTP-GGUF) |
+| | Qwen NVFP4 **HIGH** | Qwen uncensored | SuperQwen | Ornith |
+|---|---|---|---|---|
+| File | `Qwen3.8-27B-NVFP4-MTP-HIGH.gguf` (17.57 GB) | `Qwen3.8-27B-huihui-NVFP4.gguf` (19.65 GB) | `SuperQwen3.8-27b-abliterated-Q4_K_M.gguf` (15.41 GiB) | `Ornith-1.5-35B-A3B-NVFP4-Q5K-mtp.gguf` (20.2 GB) |
+| | NVFP4 backbone, **LM head BF16** | Huihui abliterated NVFP4 | Abliterated Q4_K_M | 35B-A3B MoE NVFP4 |
+| Slots | 3 | 3 | 3 | 2 |
+| Source | [esatapedico/…](https://huggingface.co/esatapedico/Qwen3.8-27B-NVFP4-MTP-GGUF) | [renketong/…](https://huggingface.co/renketong/Huihui-Qwen3.8-27B-abliterated-NVFP4-GGUF) | [Jiunsong/…](https://huggingface.co/Jiunsong/SuperQwen3.8-27b-abliterated-GGUF) | [Avifenesh/…](https://huggingface.co/Avifenesh/Ornith-1.5-35B-A3B-NVFP4-MTP-GGUF) |
 
 ## No MTP
 
@@ -80,6 +81,7 @@ Rest                  weights + VBR KV, all GPU (-ngl 99)
 ```bash
 omp --model qwen-local/qwen3.8-27b
 omp --model qwen-local/qwen3.8-27b-uncensored
+omp --model qwen-local/superqwen3.8-27b
 omp --model ornith-local/ornith-1.5-35b
 ```
 
@@ -113,5 +115,6 @@ docker run --rm --gpus all -e NVIDIA_REQUIRE_CUDA="cuda>=13.2" --entrypoint nvid
 - https://github.com/spiritbuun/buun-llama-cpp
 - https://huggingface.co/esatapedico/Qwen3.8-27B-NVFP4-MTP-GGUF
 - https://huggingface.co/renketong/Huihui-Qwen3.8-27B-abliterated-NVFP4-GGUF
+- https://huggingface.co/Jiunsong/SuperQwen3.8-27b-abliterated-GGUF
 - https://huggingface.co/Avifenesh/Ornith-1.5-35B-A3B-NVFP4-MTP-GGUF
 - https://omp.sh

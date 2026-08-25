@@ -36,10 +36,10 @@ log() { printf '%s\n' "$*" | tee -a "$SUMMARY"; }
 
 down_all() {
     local y
-    for y in qwen.yml qwen-uncensored.yml ornith.yml; do
+    for y in qwen.yml qwen-uncensored.yml superqwen.yml ornith.yml; do
         docker compose -f docker-compose.yml -f "$y" down --remove-orphans --timeout 20 >/dev/null 2>&1 || true
     done
-    docker rm -f qwen qwen-uncensored ornith llm-compare >/dev/null 2>&1 || true
+    docker rm -f qwen qwen-uncensored superqwen ornith llm-compare >/dev/null 2>&1 || true
 }
 
 gpu_mem() {
@@ -176,4 +176,4 @@ log "summary: $SUMMARY"
 log "done."
 echo
 echo "Summary: $SUMMARY"
-echo "Stack is down. Start with ./llm qwen | qwen-uncensored | ornith"
+echo "Stack is down. Start with ./llm qwen | qwen-uncensored | superqwen | ornith"
