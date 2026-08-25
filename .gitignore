@@ -1,0 +1,9 @@
+# Weights stay on disk / Hugging Face. Download with ./llm download.
+*.gguf
+models/.cache/
+.cache/
+
+# Local noise
+*.swp
+*~
+.DS_Store

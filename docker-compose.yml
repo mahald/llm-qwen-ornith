@@ -1,0 +1,32 @@
+# Shared stack. Model-specific command lives in qwen.yml / ornith.yml:
+#   ./llm qwen
+#   ./llm ornith
+#
+# One service, one GPU, one port. Switching overlays recreates the container.
+# NVIDIA Container Toolkit injects libcuda from the host driver (--gpus all).
+# CUDA 13.3.1 image on a 13.2 host driver: NVIDIA_REQUIRE_CUDA=cuda>=13.2.
+
+name: llm
+
+services:
+  llm:
+    image: buun-llama:native
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    gpus: all
+    mem_limit: 12g
+    memswap_limit: 12g
+    volumes:
+      - ./models:/models:ro
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+      NVIDIA_REQUIRE_CUDA: "cuda>=13.2"
+      GGML_CUDA_ENABLE_UNIFIED_MEMORY: "0"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 48
+      start_period: 20s

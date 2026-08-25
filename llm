@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+# One helper: ./llm qwen | ornith | stop | build | download
+set -euo pipefail
+cd "$(dirname "$0")"
+
+IMAGE=buun-llama:native
+COMPOSE=(docker compose -f docker-compose.yml)
+
+usage() {
+    echo "usage: $0 qwen | ornith | stop | build | download" >&2
+    exit 1
+}
+
+down_all() {
+    local y
+    for y in qwen.yml ornith.yml; do
+        "${COMPOSE[@]}" -f "$y" down --remove-orphans --timeout 20 >/dev/null 2>&1 || true
+    done
+    docker rm -f qwen ornith llm-compare >/dev/null 2>&1 || true
+}
+
+up_model() {
+    local yml="$1"
+    echo "Stopping other models…"
+    down_all
+    "${COMPOSE[@]}" -f "$yml" up -d --wait --wait-timeout 240 --remove-orphans
+    "${COMPOSE[@]}" -f "$yml" ps
+    nvidia-smi --query-gpu=name,memory.used,memory.total,memory.free --format=csv
+}
+
+do_build() {
+    command -v nvidia-smi >/dev/null 2>&1 || {
+        echo "nvidia-smi not found — NVIDIA driver required." >&2
+        exit 1
+    }
+    local arch
+    arch=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader \
+           | tr -d ' .' | sort -u | paste -sd';' -)
+    [[ -n "$arch" ]] || { echo "Could not read compute capability." >&2; exit 1; }
+    echo "GPU compute capability: ${arch}"
+    echo "Building ${IMAGE} (CPU: -march=native, CUDA: sm_${arch//;/, sm_}, toolkit 13.3.1, buun master)"
+    docker build \
+        --build-arg CUDA_DOCKER_ARCH="${arch}" \
+        --build-arg GGML_NATIVE=ON \
+        --build-arg LLAMACPP_REF=master \
+        -t "$IMAGE" \
+        .
+}
+
+parse_download() {
+    python3 - "$1" <<'PY'
+import re, sys
+text = open(sys.argv[1]).read()
+block = re.search(r"^x-download:\n((?:  .+\n)+)", text, re.M)
+if not block:
+    sys.exit(f"no x-download in {sys.argv[1]}")
+kv = dict(re.findall(r"^\s+(\w+):\s+(\S+)", block.group(1), re.M))
+for key in ("repo", "file", "sha256"):
+    if key not in kv:
+        sys.exit(f"x-download missing {key} in {sys.argv[1]}")
+    print(kv[key])
+PY
+}
+
+check_one() {
+    local yml="$1"
+    local repo file expected
+    repo=$(parse_download "$yml" | sed -n '1p')
+    file=$(parse_download "$yml" | sed -n '2p')
+    expected=$(parse_download "$yml" | sed -n '3p')
+    local path="models/$file"
+
+    echo
+    echo "== ${repo} / ${file}"
+    python3 - "$repo" <<'PY' || true
+import json, sys, urllib.request
+repo = sys.argv[1]
+try:
+    with urllib.request.urlopen(f"https://huggingface.co/api/models/{repo}", timeout=30) as r:
+        data = json.load(r)
+except Exception as e:
+    print(f"  HF API: {e}")
+    sys.exit(0)
+print(f"  lastModified: {data.get('lastModified')}")
+print(f"  repo sha:     {data.get('sha')}")
+PY
+
+    if [[ -f "$path" ]]; then
+        local got
+        got=$(sha256sum "$path" | awk '{print $1}')
+        if [[ "$got" == "$expected" ]]; then
+            echo "  local OK  ${got}"
+            return 0
+        fi
+        echo "  SHA-256 mismatch, re-downloading…"
+        echo "    expected ${expected}"
+        echo "    local    ${got}"
+    else
+        echo "  missing, downloading…"
+    fi
+
+    command -v hf >/dev/null 2>&1 || {
+        echo "hf not found. Install: pip install -U huggingface_hub" >&2
+        exit 1
+    }
+    hf download "$repo" "$file" --local-dir models
+    local got
+    got=$(sha256sum "$path" | awk '{print $1}')
+    if [[ "$got" != "$expected" ]]; then
+        echo "SHA-256 still wrong after download:" >&2
+        echo "  expected ${expected}" >&2
+        echo "  got      ${got}" >&2
+        exit 1
+    fi
+    echo "  OK  ${got}"
+}
+
+do_download() {
+    mkdir -p models
+    check_one qwen.yml
+    check_one ornith.yml
+    echo
+    echo "Done. models/ is ready."
+}
+
+cmd="${1:-}"
+case "$cmd" in
+    qwen)     up_model qwen.yml ;;
+    ornith)   up_model ornith.yml ;;
+    stop)
+        down_all
+        echo "Stopped."
+        docker compose ls
+        nvidia-smi --query-gpu=name,memory.used,memory.total,memory.free --format=csv
+        ;;
+    build)    do_build ;;
+    download) do_download ;;
+    *)        usage ;;
+esac

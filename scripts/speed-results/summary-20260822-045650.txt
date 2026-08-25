@@ -1,0 +1,50 @@
+Qwen3.8-27B NVFP4 speed comparison
+stamp: 20260822-045650
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+model: models/Qwen3.8-27B-NVFP4-MTP-HIGH.gguf
+decode prompt max_tokens=128 repeats=2
+shared: -ngl 99 -c 262144 --kv-unified --fit on --fit-target 3072, same sampling
+
+=== buun-no-mtp ===
+image: qwen3.8-27b:native
+args: --port 18080 -m /models/Qwen3.8-27B-NVFP4-MTP-HIGH.gguf -a qwen3.8-27b --host 0.0.0.0 -ngl 99 -c 262144 --kv-unified --fit on --fit-target 3072 --no-mmproj --temp 0.7 --top-p 0.95 --top-k 20 --min-p 0.1 --xtc-probability 0.8 --xtc-threshold 0.2 --presence-penalty 0.0 --repeat-penalty 1.0 -lv 3 -np 3 -ct vbr --vbr-vram 1536M
+vram_after_load_mib: 16489, 24463
+  decode[1]: prompt 29 tok @ 204.5 t/s, gen 128 tok @ 39.6 t/s (prompt 142 ms, gen 3234 ms)
+  decode[2]: prompt 4 tok @ 95.6 t/s, gen 128 tok @ 39.8 t/s (prompt 42 ms, gen 3219 ms)
+  decode_avg_gen_t/s: 39.67
+  decode_avg_prefill_t/s: 150.08
+  long-prefill: prompt 1860 tok @ 2441.7 t/s, gen 64 tok @ 39.2 t/s (prompt 762 ms, gen 1635 ms)
+vram_after_requests_mib: 16827, 24463
+
+=== bee-no-mtp ===
+image: qwen3.8-27b-bee:native
+args: --port 18080 -m /models/Qwen3.8-27B-NVFP4-MTP-HIGH.gguf -a qwen3.8-27b --host 0.0.0.0 -ngl 99 -c 262144 --kv-unified --fit on --fit-target 3072 --no-mmproj --temp 0.7 --top-p 0.95 --top-k 20 --min-p 0.1 --xtc-probability 0.8 --xtc-threshold 0.2 --presence-penalty 0.0 --repeat-penalty 1.0 -lv 3 -np 3 --cache-type-k kvarn6 --cache-type-v kvarn6
+vram_after_load_mib: 23071, 24463
+  decode[1]: prompt 71 tok @ 876.9 t/s, gen 105 tok @ 36.9 t/s (prompt 81 ms, gen 2844 ms)
+  decode[2]: prompt 71 tok @ 908.8 t/s, gen 88 tok @ 37.2 t/s (prompt 78 ms, gen 2367 ms)
+  decode_avg_gen_t/s: 37.05
+  decode_avg_prefill_t/s: 892.87
+  long-prefill: prompt 1902 tok @ 2005.9 t/s, gen 64 tok @ 36.3 t/s (prompt 948 ms, gen 1763 ms)
+vram_after_requests_mib: 23347, 24463
+
+=== buun-mtp ===
+image: qwen3.8-27b:native
+args: --port 18080 -m /models/Qwen3.8-27B-NVFP4-MTP-HIGH.gguf -a qwen3.8-27b --host 0.0.0.0 -ngl 99 -c 262144 --kv-unified --fit on --fit-target 3072 --no-mmproj --temp 0.7 --top-p 0.95 --top-k 20 --min-p 0.1 --xtc-probability 0.8 --xtc-threshold 0.2 --presence-penalty 0.0 --repeat-penalty 1.0 -lv 3 -np 1 -ct vbr --vbr-vram 1536M --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75
+vram_after_load_mib: 18281, 24463
+  decode[1]: prompt 29 tok @ 184.7 t/s, gen 128 tok @ 73.8 t/s (prompt 157 ms, gen 1734 ms)
+  decode[2]: prompt 4 tok @ 97.3 t/s, gen 118 tok @ 73.5 t/s (prompt 41 ms, gen 1605 ms)
+  decode_avg_gen_t/s: 73.67
+  decode_avg_prefill_t/s: 140.98
+  long-prefill: prompt 1860 tok @ 1979.3 t/s, gen 64 tok @ 60.9 t/s (prompt 940 ms, gen 1051 ms)
+vram_after_requests_mib: 18921, 24463
+
+=== bee-mtp ===
+image: qwen3.8-27b-bee:native
+args: --port 18080 -m /models/Qwen3.8-27B-NVFP4-MTP-HIGH.gguf -a qwen3.8-27b --host 0.0.0.0 -ngl 99 -c 262144 --kv-unified --fit on --fit-target 3072 --no-mmproj --temp 0.7 --top-p 0.95 --top-k 20 --min-p 0.1 --xtc-probability 0.8 --xtc-threshold 0.2 --presence-penalty 0.0 --repeat-penalty 1.0 -lv 3 -np 1 --cache-type-k kvarn6 --cache-type-v kvarn6 --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75
+vram_after_load_mib: 23979, 24463
+FAIL: warmup request
+SKIP/FAIL bee-mtp
+
+raw timings: /home/marcel/LLM/qwen3.8-27b-nvfp4-mtp-llamacpp-cuda/speed-results/raw-20260822-045650.jsonl
+summary: /home/marcel/LLM/qwen3.8-27b-nvfp4-mtp-llamacpp-cuda/speed-results/summary-20260822-045650.txt
+done.

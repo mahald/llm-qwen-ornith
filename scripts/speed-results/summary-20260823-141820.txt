@@ -1,0 +1,46 @@
+buun-llama-cpp  Qwen3.8-27B vs Ornith-1.5-35B-A3B  (no MTP)
+stamp: 20260823-141820
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+image: buun-llama:native
+flags: -ngl 99 -c 262144 -ct vbr --kv-unified --vbr-vram auto --fit on --no-mmproj --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.0 --presence-penalty 0.0 --repeat-penalty 1.0 -lv 3
+decode prompt max_tokens=128 repeats=2
+MTP: off (24 GB VRAM is not enough for draft head + a useful KV cache)
+
+=== qwen ===
+image: buun-llama:native
+model: Qwen3.8-27B-NVFP4-MTP-HIGH.gguf
+alias: qwen3.8-27b  np=3
+vram_after_load_mib (used,total,free): 16553, 24463, 7431
+0.00.149.181 I VBR dynamic runtime controller: KV budget auto (remaining VRAM, resolved by fit), entry tier f16, floor 1.25 bits/value, price-ordered decode-time degrades
+0.00.258.371 I common_fit_params: VBR dynamic: fitting with KV priced at the turbo1_tcq floor tier
+0.00.567.941 I operator(): VBR dynamic: KV VRAM budget 8389 MiB (auto, from remaining memory) — decode-time degrade controller armed
+0.12.106.158 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+0.12.106.254 W srv    load_model: prompt cache state storage is not supported by dynamic VBR (KV tiers change at runtime), it will be disabled
+  decode[1]: prompt 29 tok @ 189.9 t/s, gen 80 tok @ 38.7 t/s (prompt 153 ms, gen 2068 ms)
+  decode[2]: prompt 4 tok @ 92.9 t/s, gen 77 tok @ 38.7 t/s (prompt 43 ms, gen 1991 ms)
+  decode_avg_gen_t/s: 38.68
+  decode_avg_prefill_t/s: 141.42
+  long-prefill: prompt 1860 tok @ 2331.3 t/s, gen 64 tok @ 37.9 t/s (prompt 798 ms, gen 1689 ms)
+vram_after_requests_mib (used,total,free): 16827, 24463, 7157
+
+=== ornith ===
+image: buun-llama:native
+model: Ornith-1.5-35B-A3B-NVFP4-Q5K-mtp.gguf
+alias: ornith-1.5-35b  np=2
+vram_after_load_mib (used,total,free): 19049, 24463, 4935
+0.00.144.074 I VBR dynamic runtime controller: KV budget auto (remaining VRAM, resolved by fit), entry tier f16, floor 1.25 bits/value, price-ordered decode-time degrades
+0.00.245.453 I common_fit_params: VBR dynamic: fitting with KV priced at the turbo1_tcq floor tier
+0.00.553.334 I operator(): VBR dynamic: KV VRAM budget 5755 MiB (auto, from remaining memory) — decode-time degrade controller armed
+0.00.553.339 I operator(): MoE cache fit kept stock placement because the complete model already meets the fit targets
+0.14.393.849 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+0.14.394.122 W srv    load_model: prompt cache state storage is not supported by dynamic VBR (KV tiers change at runtime), it will be disabled
+  decode[1]: prompt 29 tok @ 368.9 t/s, gen 128 tok @ 198.5 t/s (prompt 79 ms, gen 645 ms)
+  decode[2]: prompt 4 tok @ 222.8 t/s, gen 128 tok @ 200.4 t/s (prompt 18 ms, gen 639 ms)
+  decode_avg_gen_t/s: 199.46
+  decode_avg_prefill_t/s: 295.85
+  long-prefill: prompt 1860 tok @ 5010.5 t/s, gen 64 tok @ 188.4 t/s (prompt 371 ms, gen 340 ms)
+vram_after_requests_mib (used,total,free): 19171, 24463, 4813
+
+raw timings: /home/marcel/LLM/speed-results/raw-20260823-141820.jsonl
+summary: /home/marcel/LLM/speed-results/summary-20260823-141820.txt
+done.

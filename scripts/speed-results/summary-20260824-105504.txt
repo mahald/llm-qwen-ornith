@@ -1,0 +1,42 @@
+buun-llama-cpp  Qwen3.8-27B NVFP4 HIGH vs Unsloth UD-Q4_K_XL  (no MTP)
+stamp: 20260824-105504
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+image: buun-llama:native
+decode prompt max_tokens=128 repeats=2
+MTP: off. --vbr-vram auto + --fit-target 1024: leftover VRAM goes to KV.
+
+=== qwen-nvfp4 ===
+overlay: qwen.yml
+alias: qwen3.8-27b
+vram_after_load_mib (used,total,free): 16487, 24463, 7497
+qwen  | 0.00.175.554 I VBR dynamic runtime controller: KV budget auto (remaining VRAM, resolved by fit), entry tier f16, floor 1.25 bits/value, price-ordered decode-time degrades
+qwen  | 0.00.301.385 I common_fit_params: VBR dynamic: fitting with KV priced at the turbo1_tcq floor tier
+qwen  | 0.00.601.250 I operator(): VBR dynamic: KV VRAM budget 8143 MiB (auto, from remaining memory) — decode-time degrade controller armed
+qwen  | 0.11.348.063 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+qwen  | 0.11.348.346 W srv    load_model: prompt cache state storage is not supported by dynamic VBR (KV tiers change at runtime), it will be disabled
+  decode[1]: prompt 29 tok @ 203.8 t/s, gen 79 tok @ 38.6 t/s (prompt 142 ms, gen 2048 ms)
+  decode[2]: prompt 4 tok @ 95.6 t/s, gen 128 tok @ 38.9 t/s (prompt 42 ms, gen 3288 ms)
+  decode_avg_gen_t/s: 38.75
+  decode_avg_prefill_t/s: 149.7
+  long-prefill: prompt 1860 tok @ 2430.5 t/s, gen 64 tok @ 38.7 t/s (prompt 765 ms, gen 1654 ms)
+vram_after_requests_mib (used,total,free): 16825, 24463, 7159
+
+=== qwen-ud ===
+overlay: qwen-ud.yml
+alias: qwen3.8-27b-ud
+vram_after_load_mib (used,total,free): 16615, 24463, 7369
+qwen-ud  | 0.00.181.389 I VBR dynamic runtime controller: KV budget auto (remaining VRAM, resolved by fit), entry tier f16, floor 1.25 bits/value, price-ordered decode-time degrades
+qwen-ud  | 0.00.315.062 I common_fit_params: VBR dynamic: fitting with KV priced at the turbo1_tcq floor tier
+qwen-ud  | 0.00.593.387 I operator(): VBR dynamic: KV VRAM budget 7068 MiB (auto, from remaining memory) — decode-time degrade controller armed
+qwen-ud  | 0.10.826.896 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+qwen-ud  | 0.10.826.957 W srv    load_model: prompt cache state storage is not supported by dynamic VBR (KV tiers change at runtime), it will be disabled
+  decode[1]: prompt 29 tok @ 190.9 t/s, gen 79 tok @ 36.1 t/s (prompt 152 ms, gen 2186 ms)
+  decode[2]: prompt 4 tok @ 85.1 t/s, gen 87 tok @ 36.1 t/s (prompt 47 ms, gen 2408 ms)
+  decode_avg_gen_t/s: 36.13
+  decode_avg_prefill_t/s: 138.0
+  long-prefill: prompt 1860 tok @ 1449.0 t/s, gen 64 tok @ 35.3 t/s (prompt 1284 ms, gen 1815 ms)
+vram_after_requests_mib (used,total,free): 16891, 24463, 7093
+
+raw timings: /home/marcel/LLM/scripts/speed-results/raw-20260824-105504.jsonl
+summary: /home/marcel/LLM/scripts/speed-results/summary-20260824-105504.txt
+done.

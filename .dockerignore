@@ -1,0 +1,11 @@
+models
+*.gguf
+scripts
+llm
+qwen.yml
+ornith.yml
+docker-compose.yml
+README.md
+AGENTS.md
+.git
+**/.git

@@ -1,0 +1,38 @@
+qwen-ud  | warn: LLAMA_ARG_HOST environment variable is set, but will be overwritten by command line argument --host
+qwen-ud  | 0.00.181.389 I VBR dynamic runtime controller: KV budget auto (remaining VRAM, resolved by fit), entry tier f16, floor 1.25 bits/value, price-ordered decode-time degrades
+qwen-ud  | 0.00.181.688 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+qwen-ud  | 0.00.313.598 W srv  llama_server: -----------------
+qwen-ud  | 0.00.313.600 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+qwen-ud  | 0.00.313.600 W srv  llama_server: this can be a security risk (cross-origin attacks)
+qwen-ud  | 0.00.313.600 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+qwen-ud  | 0.00.313.600 W srv  llama_server: -----------------
+qwen-ud  | 0.00.315.017 I srv    load_model: loading model '/models/Qwen3.8-27B-UD-Q4_K_XL.gguf'
+qwen-ud  | 0.00.315.062 I common_fit_params: VBR dynamic: fitting with KV priced at the turbo1_tcq floor tier
+qwen-ud  | VMEAN tap: no live V layers — add disabled
+qwen-ud  | 0.00.593.387 I operator(): VBR dynamic: KV VRAM budget 7068 MiB (auto, from remaining memory) — decode-time degrade controller armed
+qwen-ud  | 0.00.793.152 W model has unused tensor blk.64.attn_norm.weight (size = 20480 bytes) -- ignoring
+qwen-ud  | 0.00.793.156 W model has unused tensor blk.64.post_attention_norm.weight (size = 20480 bytes) -- ignoring
+qwen-ud  | 0.00.793.160 W model has unused tensor blk.64.attn_q.weight (size = 51609600 bytes) -- ignoring
+qwen-ud  | 0.00.793.162 W model has unused tensor blk.64.attn_k.weight (size = 5570560 bytes) -- ignoring
+qwen-ud  | 0.00.793.163 W model has unused tensor blk.64.attn_v.weight (size = 5570560 bytes) -- ignoring
+qwen-ud  | 0.00.793.168 W model has unused tensor blk.64.attn_output.weight (size = 25804800 bytes) -- ignoring
+qwen-ud  | 0.00.793.169 W model has unused tensor blk.64.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+qwen-ud  | 0.00.793.171 W model has unused tensor blk.64.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+qwen-ud  | 0.00.793.172 W model has unused tensor blk.64.ffn_gate.weight (size = 73113600 bytes) -- ignoring
+qwen-ud  | 0.00.793.174 W model has unused tensor blk.64.ffn_down.weight (size = 73113600 bytes) -- ignoring
+qwen-ud  | 0.00.793.175 W model has unused tensor blk.64.ffn_up.weight (size = 73113600 bytes) -- ignoring
+qwen-ud  | 0.00.793.178 W model has unused tensor blk.64.nextn.eh_proj.weight (size = 43008000 bytes) -- ignoring
+qwen-ud  | 0.00.793.179 W model has unused tensor blk.64.nextn.enorm.weight (size = 20480 bytes) -- ignoring
+qwen-ud  | 0.00.793.181 W model has unused tensor blk.64.nextn.hnorm.weight (size = 20480 bytes) -- ignoring
+qwen-ud  | 0.00.793.185 W model has unused tensor blk.64.nextn.shared_head_norm.weight (size = 20480 bytes) -- ignoring
+qwen-ud  | TCQ1 decode: K/V codebooks (K=baked-in V=baked-in) hotswap=0
+qwen-ud  | TCQ decode: context-adaptive V alpha enabled
+qwen-ud  | 0.10.826.888 I srv    load_model: computation-frontier ratchet: legacy reads authoritative, flip after 1024 qualifying agreements
+qwen-ud  | 0.10.826.896 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+qwen-ud  | 0.10.826.957 W srv    load_model: prompt cache state storage is not supported by dynamic VBR (KV tiers change at runtime), it will be disabled
+qwen-ud  | 0.10.826.975 W srv          init: --cache-idle-slots requires --cache-ram, disabling
+qwen-ud  | 0.10.829.852 I srv          init: chat template supports preserving reasoning, consider enabling it via --reasoning-preserve
+qwen-ud  | 0.10.829.888 I srv  llama_server: model loaded
+qwen-ud  | 0.10.829.891 I srv  llama_server: listening on http://0.0.0.0:8080
+qwen-ud  | 0.10.829.891 W srv  llama_server: NOTICE: server default port will be changed to :9931 in a future release
+qwen-ud  | 0.10.829.891 W srv  llama_server:         ref: https://github.com/ggml-org/llama.cpp/pull/26508
