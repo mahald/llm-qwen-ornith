@@ -1,0 +1,17 @@
+genesis-main  | warn: LLAMA_ARG_HOST environment variable is set, but will be overwritten by command line argument --host
+genesis-main  | warn: LLAMA_ARG_REASONING environment variable is set, but will be overwritten by command line argument --reasoning
+genesis-main  | warn: LLAMA_ARG_REASONING_EFFORT environment variable is set, but will be overwritten by command line argument --reasoning-effort
+genesis-main  | warn: LLAMA_ARG_REASONING_PRESERVE environment variable is set, but will be overwritten by command line argument --reasoning-preserve
+genesis-main  | 0.00.124.963 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+genesis-main  | 0.00.126.523 W srv  llama_server: -----------------
+genesis-main  | 0.00.126.525 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+genesis-main  | 0.00.126.525 W srv  llama_server: this can be a security risk (cross-origin attacks)
+genesis-main  | 0.00.126.525 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+genesis-main  | 0.00.126.525 W srv  llama_server: -----------------
+genesis-main  | 0.00.127.871 I srv    load_model: loading model '/models/Tiel-Coder-35B-A3B-Genesis-Hermes-NVFP4-v4.gguf'
+genesis-main  | 0.03.609.228 I cmn          init: llama threadpool init, n_threads = 4
+genesis-main  | 0.03.691.393 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+genesis-main  | 0.03.700.092 I srv  llama_server: model loaded
+genesis-main  | 0.03.700.097 I srv  llama_server: listening on http://0.0.0.0:8080
+genesis-main  | 0.03.700.097 W srv  llama_server: NOTICE: server default port will be changed to :9931 in a future release
+genesis-main  | 0.03.700.098 W srv  llama_server:         ref: https://github.com/ggml-org/llama.cpp/pull/26508

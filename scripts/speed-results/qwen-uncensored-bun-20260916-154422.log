@@ -1,0 +1,135 @@
+qwen-uncensored-bun  | warn: LLAMA_ARG_HOST environment variable is set, but will be overwritten by command line argument --host
+qwen-uncensored-bun  | warn: LLAMA_ARG_REASONING environment variable is set, but will be overwritten by command line argument --reasoning
+qwen-uncensored-bun  | warn: LLAMA_ARG_REASONING_EFFORT environment variable is set, but will be overwritten by command line argument --reasoning-effort
+qwen-uncensored-bun  | warn: LLAMA_ARG_REASONING_PRESERVE environment variable is set, but will be overwritten by command line argument --reasoning-preserve
+qwen-uncensored-bun  | 0.00.171.008 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+qwen-uncensored-bun  | 0.00.173.768 W srv  llama_server: -----------------
+qwen-uncensored-bun  | 0.00.173.769 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+qwen-uncensored-bun  | 0.00.173.769 W srv  llama_server: this can be a security risk (cross-origin attacks)
+qwen-uncensored-bun  | 0.00.173.769 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+qwen-uncensored-bun  | 0.00.173.770 W srv  llama_server: -----------------
+qwen-uncensored-bun  | 0.00.175.616 I srv    load_model: loading model '/models/Qwen3.8-27B-huihui-NVFP4.gguf'
+qwen-uncensored-bun  | 0.00.502.189 W model has unused tensor blk.64.attn_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.194 W model has unused tensor blk.64.post_attention_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.199 W model has unused tensor blk.64.attn_q.weight (size = 125829120 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.201 W model has unused tensor blk.64.attn_k.weight (size = 10485760 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.203 W model has unused tensor blk.64.attn_v.weight (size = 10485760 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.208 W model has unused tensor blk.64.attn_output.weight (size = 62914560 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.210 W model has unused tensor blk.64.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.212 W model has unused tensor blk.64.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.214 W model has unused tensor blk.64.ffn_gate.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.216 W model has unused tensor blk.64.ffn_up.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.217 W model has unused tensor blk.64.ffn_down.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.220 W model has unused tensor blk.64.nextn.eh_proj.weight (size = 104857600 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.222 W model has unused tensor blk.64.nextn.enorm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.224 W model has unused tensor blk.64.nextn.hnorm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.502.229 W model has unused tensor blk.64.nextn.shared_head_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.539.903 E llama_model_load: error loading model: done_getting_tensors: wrong number of tensors; expected 1858, got 1362
+qwen-uncensored-bun  | 0.00.539.963 E llama_model_load_from_file_impl: failed to load model
+qwen-uncensored-bun  | libggml-base.so.0(+0x201b6)[0x724cb511d1b6]
+qwen-uncensored-bun  | libggml-base.so.0(ggml_print_backtrace+0x21a)[0x724cb511d63a]
+qwen-uncensored-bun  | libggml-base.so.0(+0x3641f)[0x724cb513341f]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0xbb0da)[0x724cb68400da]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(_ZSt10unexpectedv+0x0)[0x724cb682aa55]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0xbb391)[0x724cb6840391]
+qwen-uncensored-bun  | libllama-common.so.0(+0x10b395)[0x724cb60b3395]
+qwen-uncensored-bun  | libllama-common.so.0(_ZN18common_init_resultC1ER13common_paramsb+0x94)[0x724cb623a554]
+qwen-uncensored-bun  | libllama-common.so.0(_Z23common_init_from_paramsR13common_paramsb+0xac)[0x724cb623ee9c]
+qwen-uncensored-bun  | libllama-server-impl.so(_ZN19server_context_impl10load_modelER13common_params+0xa01)[0x724cb6c80a81]
+qwen-uncensored-bun  | libllama-server-impl.so(_Z12llama_serverR13common_paramsiPPc+0x3d14)[0x724cb6b45d64]
+qwen-uncensored-bun  | libllama-server-impl.so(_Z12llama_serveriPPc+0x1447)[0x724cb6b48677]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca)[0x724cb656f1ca]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b)[0x724cb656f28b]
+qwen-uncensored-bun  | /app/llama-server(+0x1315)[0x5a0fedd3b315]
+qwen-uncensored-bun  | terminate called after throwing an instance of 'std::runtime_error'
+qwen-uncensored-bun  |   what():  failed to inspect model for automatic VBR codec selection
+qwen-uncensored-bun  | warn: LLAMA_ARG_HOST environment variable is set, but will be overwritten by command line argument --host
+qwen-uncensored-bun  | warn: LLAMA_ARG_REASONING environment variable is set, but will be overwritten by command line argument --reasoning
+qwen-uncensored-bun  | warn: LLAMA_ARG_REASONING_EFFORT environment variable is set, but will be overwritten by command line argument --reasoning-effort
+qwen-uncensored-bun  | warn: LLAMA_ARG_REASONING_PRESERVE environment variable is set, but will be overwritten by command line argument --reasoning-preserve
+qwen-uncensored-bun  | 0.00.090.949 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+qwen-uncensored-bun  | 0.00.091.726 W srv  llama_server: -----------------
+qwen-uncensored-bun  | 0.00.091.728 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+qwen-uncensored-bun  | 0.00.091.728 W srv  llama_server: this can be a security risk (cross-origin attacks)
+qwen-uncensored-bun  | 0.00.091.728 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+qwen-uncensored-bun  | 0.00.091.729 W srv  llama_server: -----------------
+qwen-uncensored-bun  | 0.00.093.209 I srv    load_model: loading model '/models/Qwen3.8-27B-huihui-NVFP4.gguf'
+qwen-uncensored-bun  | 0.00.390.104 W model has unused tensor blk.64.attn_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.110 W model has unused tensor blk.64.post_attention_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.114 W model has unused tensor blk.64.attn_q.weight (size = 125829120 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.116 W model has unused tensor blk.64.attn_k.weight (size = 10485760 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.118 W model has unused tensor blk.64.attn_v.weight (size = 10485760 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.123 W model has unused tensor blk.64.attn_output.weight (size = 62914560 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.125 W model has unused tensor blk.64.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.127 W model has unused tensor blk.64.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.129 W model has unused tensor blk.64.ffn_gate.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.130 W model has unused tensor blk.64.ffn_up.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.132 W model has unused tensor blk.64.ffn_down.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.135 W model has unused tensor blk.64.nextn.eh_proj.weight (size = 104857600 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.137 W model has unused tensor blk.64.nextn.enorm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.139 W model has unused tensor blk.64.nextn.hnorm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.390.143 W model has unused tensor blk.64.nextn.shared_head_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.426.473 E llama_model_load: error loading model: done_getting_tensors: wrong number of tensors; expected 1858, got 1362
+qwen-uncensored-bun  | 0.00.426.531 E llama_model_load_from_file_impl: failed to load model
+qwen-uncensored-bun  | libggml-base.so.0(+0x201b6)[0x7b51cce401b6]
+qwen-uncensored-bun  | libggml-base.so.0(ggml_print_backtrace+0x21a)[0x7b51cce4063a]
+qwen-uncensored-bun  | libggml-base.so.0(+0x3641f)[0x7b51cce5641f]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0xbb0da)[0x7b51ce5630da]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(_ZSt10unexpectedv+0x0)[0x7b51ce54da55]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0xbb391)[0x7b51ce563391]
+qwen-uncensored-bun  | libllama-common.so.0(+0x10b395)[0x7b51cddd6395]
+qwen-uncensored-bun  | libllama-common.so.0(_ZN18common_init_resultC1ER13common_paramsb+0x94)[0x7b51cdf5d554]
+qwen-uncensored-bun  | libllama-common.so.0(_Z23common_init_from_paramsR13common_paramsb+0xac)[0x7b51cdf61e9c]
+qwen-uncensored-bun  | libllama-server-impl.so(_ZN19server_context_impl10load_modelER13common_params+0xa01)[0x7b51ce9a3a81]
+qwen-uncensored-bun  | libllama-server-impl.so(_Z12llama_serverR13common_paramsiPPc+0x3d14)[0x7b51ce868d64]
+qwen-uncensored-bun  | libllama-server-impl.so(_Z12llama_serveriPPc+0x1447)[0x7b51ce86b677]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca)[0x7b51ce2921ca]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b)[0x7b51ce29228b]
+qwen-uncensored-bun  | /app/llama-server(+0x1315)[0x63a1f26f4315]
+qwen-uncensored-bun  | terminate called after throwing an instance of 'std::runtime_error'
+qwen-uncensored-bun  |   what():  failed to inspect model for automatic VBR codec selection
+qwen-uncensored-bun  | warn: LLAMA_ARG_HOST environment variable is set, but will be overwritten by command line argument --host
+qwen-uncensored-bun  | warn: LLAMA_ARG_REASONING environment variable is set, but will be overwritten by command line argument --reasoning
+qwen-uncensored-bun  | warn: LLAMA_ARG_REASONING_EFFORT environment variable is set, but will be overwritten by command line argument --reasoning-effort
+qwen-uncensored-bun  | warn: LLAMA_ARG_REASONING_PRESERVE environment variable is set, but will be overwritten by command line argument --reasoning-preserve
+qwen-uncensored-bun  | 0.00.100.148 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+qwen-uncensored-bun  | 0.00.100.899 W srv  llama_server: -----------------
+qwen-uncensored-bun  | 0.00.100.902 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+qwen-uncensored-bun  | 0.00.100.902 W srv  llama_server: this can be a security risk (cross-origin attacks)
+qwen-uncensored-bun  | 0.00.100.903 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+qwen-uncensored-bun  | 0.00.100.903 W srv  llama_server: -----------------
+qwen-uncensored-bun  | 0.00.102.479 I srv    load_model: loading model '/models/Qwen3.8-27B-huihui-NVFP4.gguf'
+qwen-uncensored-bun  | 0.00.406.650 W model has unused tensor blk.64.attn_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.656 W model has unused tensor blk.64.post_attention_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.660 W model has unused tensor blk.64.attn_q.weight (size = 125829120 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.662 W model has unused tensor blk.64.attn_k.weight (size = 10485760 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.664 W model has unused tensor blk.64.attn_v.weight (size = 10485760 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.669 W model has unused tensor blk.64.attn_output.weight (size = 62914560 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.671 W model has unused tensor blk.64.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.673 W model has unused tensor blk.64.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.674 W model has unused tensor blk.64.ffn_gate.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.676 W model has unused tensor blk.64.ffn_up.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.678 W model has unused tensor blk.64.ffn_down.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.681 W model has unused tensor blk.64.nextn.eh_proj.weight (size = 104857600 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.682 W model has unused tensor blk.64.nextn.enorm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.684 W model has unused tensor blk.64.nextn.hnorm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.689 W model has unused tensor blk.64.nextn.shared_head_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.443.747 E llama_model_load: error loading model: done_getting_tensors: wrong number of tensors; expected 1858, got 1362
+qwen-uncensored-bun  | 0.00.443.807 E llama_model_load_from_file_impl: failed to load model
+qwen-uncensored-bun  | libggml-base.so.0(+0x201b6)[0x73e0273361b6]
+qwen-uncensored-bun  | libggml-base.so.0(ggml_print_backtrace+0x21a)[0x73e02733663a]
+qwen-uncensored-bun  | libggml-base.so.0(+0x3641f)[0x73e02734c41f]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0xbb0da)[0x73e028a590da]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(_ZSt10unexpectedv+0x0)[0x73e028a43a55]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0xbb391)[0x73e028a59391]
+qwen-uncensored-bun  | libllama-common.so.0(+0x10b395)[0x73e0282cc395]
+qwen-uncensored-bun  | libllama-common.so.0(_ZN18common_init_resultC1ER13common_paramsb+0x94)[0x73e028453554]
+qwen-uncensored-bun  | libllama-common.so.0(_Z23common_init_from_paramsR13common_paramsb+0xac)[0x73e028457e9c]
+qwen-uncensored-bun  | libllama-server-impl.so(_ZN19server_context_impl10load_modelER13common_params+0xa01)[0x73e028e99a81]
+qwen-uncensored-bun  | libllama-server-impl.so(_Z12llama_serverR13common_paramsiPPc+0x3d14)[0x73e028d5ed64]
+qwen-uncensored-bun  | libllama-server-impl.so(_Z12llama_serveriPPc+0x1447)[0x73e028d61677]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca)[0x73e0287881ca]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b)[0x73e02878828b]
+qwen-uncensored-bun  | /app/llama-server(+0x1315)[0x64b92d486315]
+qwen-uncensored-bun  | terminate called after throwing an instance of 'std::runtime_error'
+qwen-uncensored-bun  |   what():  failed to inspect model for automatic VBR codec selection

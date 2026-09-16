@@ -49,8 +49,11 @@ Both think. The answer is in `message.content`, reasoning in `message.reasoning_
 |---|---|
 | `docker-compose.yml` | Image, GPU (`--gpus all`), port 8080, `NVIDIA_REQUIRE_CUDA` |
 | `qwen.yml` / `qwen-uncensored.yml` / `superqwen.yml` / `cybertiel.yml` / `tiel.yml` / `genesis.yml` | Model, slots, sampling, KVarN — **tune here** |
-| `llm` | `qwen` / `qwen-uncensored` / `superqwen` / `cybertiel` / `tiel` / `genesis` / `stop` / `build` / `download` |
-| `Dockerfile` | Native BeeLlama build, CUDA **13.3.1** |
+| `*-bun.yml` / `*-main.yml` | Comparison overlays (same GGUFs; override `image`) |
+| `llm` | overlays / `stop` / `build` `[bee\|bun\|main]` / `download` |
+| `Dockerfile` | Native BeeLlama build, CUDA **13.3.1** → `beellama:native` |
+| `Dockerfile.bun` | buun-llama-cpp master → `bun:native` (VBR KV) |
+| `Dockerfile.main` | ggml-org/llama.cpp master → `llamacpp:native` (q5_1 KV) |
 | `models/` | The GGUFs (not in git — `./llm download`) |
 | `scripts/` | `compare.sh` (TPS via `/v1/chat/completions`) and `speed-results/` |
 
@@ -129,9 +132,56 @@ HIGH / CyberTiel: [`summary-qwen-20260916-031329.txt`](scripts/speed-results/sum
 docker run --rm --gpus all -e NVIDIA_REQUIRE_CUDA="cuda>=13.2" --entrypoint nvidia-smi beellama:native
 ```
 
+## Comparison engines (bun / main)
+
+Default serving stays BeeLlama (`./llm qwen`, image `beellama:native`, `kvarn6`). Two extra images share the same GGUFs, GPU, and port:
+
+| | Image | Source | KV cache | Start |
+|---|---|---|---|---|
+| **bee** (default) | `beellama:native` | [Anbeeld/beellama.cpp](https://github.com/Anbeeld/beellama.cpp) | `kvarn6` + `--kv-tail-tokens 1024` | `./llm qwen` |
+| **bun** | `bun:native` | [spiritbuun/buun-llama-cpp](https://github.com/spiritbuun/buun-llama-cpp) | `-ct vbr` (VBR) | `./llm qwen-bun` |
+| **main** | `llamacpp:native` | [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) | `-ctk/v q5_1` | `./llm qwen-main` |
+
+llama.cpp master has no `q6_0` KV type (allowed: f16, bf16, q8_0, q5_0, q5_1, q4_0, q4_1, iq4_nl). `q5_1` is the closest ~6-bit cache; `q8_0` at native 262k×3 slots SIGKILL'd SuperQwen (cgroup 12g).
+
+```bash
+./llm build bun
+./llm build main
+./scripts/compare.sh              # all three engines × six models
+./scripts/compare.sh bun          # VBR only
+./scripts/compare.sh main         # q5_1 only
+```
+
+`--cache-ram 0` on bun keeps the 12g cgroup from growing an 8 GiB VBR host prompt cache. `--kv-tail-tokens` is BeeLlama-only and is omitted on bun/main.
+
+### Engine comparison — 2026-09-16
+
+Same machine (RTX 5090 Laptop 24463 MiB), same GGUFs, same `/v1/chat/completions` path. Images: BeeLlama `6d81c18` (kvarn6), bun `a9b1b12` (VBR, floor t1), llama.cpp `7ceed87` (q5_1). Raw: [`summary-20260916-154422.txt`](scripts/speed-results/summary-20260916-154422.txt).
+
+Decode is generation t/s (mean of 2, `max_tokens=128`). Prefill is the ~1.9k-token summarize prompt. VRAM is after load.
+
+| Model | bee decode | bun decode | main decode | bee prefill | bun prefill | main prefill | bee VRAM | bun VRAM | main VRAM |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Qwen HIGH | **37.0** | **FAIL** | 38.3 | 1663 | — | 2236 | 23203 | — | 22567 |
+| Uncensored | **36.6** | **FAIL** | 38.1 | 1543 | — | 2168 | 23203 | — | 22567 |
+| SuperQwen | **35.2** | 37.8 | 36.7 | 1130 | 1519 | 1362 | 22691 | 15975 | 22183 |
+| CyberTiel | **144** | 162 | 156 | 2640 | 3676 | 3572 | 23403 | 21351 | 23273 |
+| Tiel | **143** | 160 | 156 | 2645 | 3653 | 3594 | 23403 | 21351 | 23273 |
+| Genesis | **157** | 182 | 175 | 3186 | 4918 | 4642 | 22123 | 20071 | 21993 |
+
+Stability:
+
+- **bee:** all six load and serve. Default stack.
+- **bun:** SuperQwen, CyberTiel, Tiel, Genesis load. **Qwen HIGH and Huihui NVFP4 abort** (`done_getting_tensors: expected 1202, got 1034` / `1858 vs 1362`). Genesis NVFP4 v4 is fine. VBR stays at f16 for these short prompts (budget 5–10 GiB, VMM so nvidia-smi used-MiB is weights + mapped pages, not the full floor).
+- **main:** all six load with `q5_1`. `q8_0` at 262144×3 SIGKILL'd SuperQwen (exit 137, 12g cgroup). `--fit` still advertises `n_ctx_slot=262144`. Tiel/CyberTiel land at ~712 MiB free (under `--fit-target 1024`).
+
+bun/main look faster on decode in part because they reuse a prompt-cache prefix on the second short decode (`prompt_n` drops to 4). Long-prefill t/s is the fairer prompt-processing comparison. BeeLlama is the only engine that reports `reasoning=` / `visible=` in `usage` on this path.
+
 ## Links
 
 - https://github.com/Anbeeld/beellama.cpp
+- https://github.com/spiritbuun/buun-llama-cpp
+- https://github.com/ggml-org/llama.cpp
 - https://huggingface.co/esatapedico/Qwen3.8-27B-NVFP4-MTP-GGUF
 - https://huggingface.co/renketong/Huihui-Qwen3.8-27B-abliterated-NVFP4-GGUF
 - https://huggingface.co/Jiunsong/SuperQwen3.8-27b-abliterated-GGUF

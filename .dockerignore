@@ -2,10 +2,9 @@ models
 *.gguf
 scripts
 llm
-qwen.yml
-qwen-uncensored.yml
-superqwen.yml
-ornith.yml
+*.yml
+Dockerfile.bun
+Dockerfile.main
 docker-compose.yml
 README.md
 AGENTS.md

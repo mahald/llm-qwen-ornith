@@ -1,0 +1,38 @@
+# Qwen3.8-27B NVFP4 HIGH — overlay for docker-compose.yml
+# Comparison overlay (llamacpp:native / ggml-org llama.cpp master). Default stack is unchanged.
+# Stock quantized KV (-ctk/v q5_1). Mainline has no q6_0; q5_1 is the closest ~6-bit type.
+#
+x-download:
+  repo: esatapedico/Qwen3.8-27B-NVFP4-MTP-GGUF
+  file: Qwen3.8-27B-NVFP4-MTP-HIGH.gguf
+  sha256: d57008707b0558bde05ce61d7402e4e668ffd45a4c97d03d2ad97db73f98d403
+
+services:
+  llm:
+    image: llamacpp:native
+    container_name: qwen-main
+    command: >
+      -m /models/Qwen3.8-27B-NVFP4-MTP-HIGH.gguf
+      -a qwen3.8-27b
+      --host 0.0.0.0
+      --port 8080
+      -ngl 99
+      -np 3
+      -c 262144
+      -ctk q5_1
+      -ctv q5_1
+      --kv-unified
+      --flash-attn on
+      --fit on
+      --fit-target 1024
+      --no-mmproj
+      --reasoning on
+      --reasoning-effort xhigh
+      --reasoning-preserve
+      --temp 0.6
+      --top-p 0.95
+      --top-k 20
+      --min-p 0.0
+      --presence-penalty 0.0
+      --repeat-penalty 1.0
+      -lv 3

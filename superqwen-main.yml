@@ -1,0 +1,38 @@
+# SuperQwen3.8-27B abliterated Q4_K_M — overlay for docker-compose.yml
+# Comparison overlay (llamacpp:native / ggml-org llama.cpp master). Default stack is unchanged.
+# Stock quantized KV (-ctk/v q5_1). Mainline has no q6_0; q5_1 is the closest ~6-bit type.
+#
+x-download:
+  repo: Jiunsong/SuperQwen3.8-27b-abliterated-GGUF
+  file: SuperQwen3.8-27b-abliterated-Q4_K_M.gguf
+  sha256: 692291d35fa3b5380f66486fe425ca715151c8b6136f07d3c5adb5ec179efd69
+
+services:
+  llm:
+    image: llamacpp:native
+    container_name: superqwen-main
+    command: >
+      -m /models/SuperQwen3.8-27b-abliterated-Q4_K_M.gguf
+      -a superqwen3.8-27b
+      --host 0.0.0.0
+      --port 8080
+      -ngl 99
+      -np 3
+      -c 262144
+      -ctk q5_1
+      -ctv q5_1
+      --kv-unified
+      --flash-attn on
+      --fit on
+      --fit-target 1024
+      --no-mmproj
+      --reasoning on
+      --reasoning-effort xhigh
+      --reasoning-preserve
+      --temp 0.6
+      --top-p 0.95
+      --top-k 20
+      --min-p 0.0
+      --presence-penalty 0.0
+      --repeat-penalty 1.0
+      -lv 3

@@ -1,0 +1,37 @@
+cybertiel  | warn: LLAMA_ARG_HOST environment variable is set, but will be overwritten by command line argument --host
+cybertiel  | warn: LLAMA_ARG_REASONING environment variable is set, but will be overwritten by command line argument --reasoning
+cybertiel  | warn: LLAMA_ARG_REASONING_EFFORT environment variable is set, but will be overwritten by command line argument --reasoning-effort
+cybertiel  | warn: LLAMA_ARG_REASONING_PRESERVE environment variable is set, but will be overwritten by command line argument --reasoning-preserve
+cybertiel  | 0.00.157.244 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+cybertiel  | 0.00.159.143 W srv  llama_server: -----------------
+cybertiel  | 0.00.159.144 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+cybertiel  | 0.00.159.144 W srv  llama_server: this can be a security risk (cross-origin attacks)
+cybertiel  | 0.00.159.144 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+cybertiel  | 0.00.159.144 W srv  llama_server: -----------------
+cybertiel  | 0.00.160.376 I srv    load_model: loading model '/models/Cyber-Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf'
+cybertiel  | 0.01.262.160 W model has unused tensor blk.40.attn_norm.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.01.262.165 W model has unused tensor blk.40.post_attention_norm.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.01.262.169 W model has unused tensor blk.40.attn_q.weight (size = 17825792 bytes) -- ignoring
+cybertiel  | 0.01.262.170 W model has unused tensor blk.40.attn_k.weight (size = 1114112 bytes) -- ignoring
+cybertiel  | 0.01.262.172 W model has unused tensor blk.40.attn_v.weight (size = 1114112 bytes) -- ignoring
+cybertiel  | 0.01.262.176 W model has unused tensor blk.40.attn_output.weight (size = 8912896 bytes) -- ignoring
+cybertiel  | 0.01.262.178 W model has unused tensor blk.40.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+cybertiel  | 0.01.262.179 W model has unused tensor blk.40.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+cybertiel  | 0.01.262.181 W model has unused tensor blk.40.ffn_gate_inp.weight (size = 2097152 bytes) -- ignoring
+cybertiel  | 0.01.262.182 W model has unused tensor blk.40.ffn_down_exps.weight (size = 115343360 bytes) -- ignoring
+cybertiel  | 0.01.262.185 W model has unused tensor blk.40.ffn_gate_exps.weight (size = 115343360 bytes) -- ignoring
+cybertiel  | 0.01.262.186 W model has unused tensor blk.40.ffn_up_exps.weight (size = 115343360 bytes) -- ignoring
+cybertiel  | 0.01.262.188 W model has unused tensor blk.40.ffn_gate_inp_shexp.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.01.262.189 W model has unused tensor blk.40.ffn_gate_shexp.weight (size = 1114112 bytes) -- ignoring
+cybertiel  | 0.01.262.191 W model has unused tensor blk.40.ffn_up_shexp.weight (size = 1114112 bytes) -- ignoring
+cybertiel  | 0.01.262.192 W model has unused tensor blk.40.ffn_down_shexp.weight (size = 1114112 bytes) -- ignoring
+cybertiel  | 0.01.262.194 W model has unused tensor blk.40.nextn.eh_proj.weight (size = 8912896 bytes) -- ignoring
+cybertiel  | 0.01.262.196 W model has unused tensor blk.40.nextn.enorm.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.01.262.197 W model has unused tensor blk.40.nextn.hnorm.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.01.262.202 W model has unused tensor blk.40.nextn.shared_head_norm.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.16.921.632 I cmn          init: llama threadpool init, n_threads = 4
+cybertiel  | 0.17.013.219 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+cybertiel  | 0.17.023.142 I srv  llama_server: model loaded
+cybertiel  | 0.17.023.147 I srv  llama_server: listening on http://0.0.0.0:8080
+cybertiel  | 0.17.023.147 W srv  llama_server: NOTICE: server default port will be changed to :9931 in a future release
+cybertiel  | 0.17.023.147 W srv  llama_server:         ref: https://github.com/ggml-org/llama.cpp/pull/26508

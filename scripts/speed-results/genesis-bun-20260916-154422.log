@@ -1,0 +1,26 @@
+genesis-bun  | warn: LLAMA_ARG_HOST environment variable is set, but will be overwritten by command line argument --host
+genesis-bun  | warn: LLAMA_ARG_REASONING environment variable is set, but will be overwritten by command line argument --reasoning
+genesis-bun  | warn: LLAMA_ARG_REASONING_EFFORT environment variable is set, but will be overwritten by command line argument --reasoning-effort
+genesis-bun  | warn: LLAMA_ARG_REASONING_PRESERVE environment variable is set, but will be overwritten by command line argument --reasoning-preserve
+genesis-bun  | 0.00.144.706 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+genesis-bun  | 0.00.148.465 W srv  llama_server: -----------------
+genesis-bun  | 0.00.148.468 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+genesis-bun  | 0.00.148.468 W srv  llama_server: this can be a security risk (cross-origin attacks)
+genesis-bun  | 0.00.148.469 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+genesis-bun  | 0.00.148.469 W srv  llama_server: -----------------
+genesis-bun  | 0.00.150.177 I srv    load_model: loading model '/models/Tiel-Coder-35B-A3B-Genesis-Hermes-NVFP4-v4.gguf'
+genesis-bun  | 0.00.482.117 I VBR dynamic turbo runtime controller: KV budget auto (remaining VRAM, resolved by fit), entry tier f16, floor 1.25 bits/value, price-ordered decode-time degrades
+genesis-bun  | 0.00.482.120 I cmn  common_param: VBR codec auto: selected turbo from model KV geometry
+genesis-bun  | 0.00.521.896 I common_fit_params: VBR dynamic: fitting with KV priced at the turbo1_tcq floor tier
+genesis-bun  | VMEAN tap: graph add armed, 10 live layers (pdim 4096)
+genesis-bun  | 0.00.773.886 I operator(): VBR dynamic: KV VRAM budget 6379 MiB (auto, from remaining memory) — decode-time degrade controller armed
+genesis-bun  | 0.00.773.890 I operator(): MoE cache fit kept stock placement because the complete model already meets the fit targets
+genesis-bun  | 0.07.591.706 I cmn          init: llama threadpool init, n_threads = 4
+genesis-bun  | TCQ decode: context-adaptive V alpha enabled
+genesis-bun  | 0.07.716.010 I srv    load_model: computation-frontier ratchet: legacy reads authoritative, flip after 1024 qualifying agreements
+genesis-bun  | 0.07.716.022 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+genesis-bun  | 0.07.716.451 W srv          init: --cache-idle-slots requires --cache-ram, disabling
+genesis-bun  | 0.07.724.266 I srv  llama_server: model loaded
+genesis-bun  | 0.07.724.270 I srv  llama_server: listening on http://0.0.0.0:8080
+genesis-bun  | 0.07.724.271 W srv  llama_server: NOTICE: server default port will be changed to :9931 in a future release
+genesis-bun  | 0.07.724.271 W srv  llama_server:         ref: https://github.com/ggml-org/llama.cpp/pull/26508

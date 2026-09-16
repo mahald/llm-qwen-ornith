@@ -1,0 +1,394 @@
+engines: bee (kvarn6) / bun (VBR) / main (q5_1)   models: qwen qwen-bun qwen-main qwen-uncensored qwen-uncensored-bun qwen-uncensored-main superqwen superqwen-bun superqwen-main cybertiel cybertiel-bun cybertiel-main tiel tiel-bun tiel-main genesis genesis-bun genesis-main
+stamp: 20260916-154422
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+beellama:native: sha256:6d81c18c3eb2eaf77b8958e8c65bd36e359fae02eebb75cc8304f99aeba07600 2026-09-16T03:05:38.731015881+02:00
+bun:native:      sha256:a9f3299187689374ee0d675fd6951f7033245b6a1eba9d40ebf2f4c6a6ac546a 2026-09-16T15:30:19.699454558+02:00
+llamacpp:native: sha256:6f5a5eede6955ba0ed63d63b18644a9183a415e9729d6e2310186b3592aedb89 2026-09-16T15:34:31.325545974+02:00
+decode prompt max_tokens=128 repeats=2
+MTP off. --fit-target 1024. Same /v1/chat/completions path as omp/pi.
+thinking: server default (xhigh).
+
+=== qwen ===
+overlay: qwen.yml
+alias: qwen3.8-27b
+vram_after_load_mib (used,total,free): 23203, 24463, 782
+qwen  | 0.10.164.486 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 15  unused_mtp_bytes: 225712128 (215.3 MiB)
+  warmup: prompt 54 tok @ 245.2 t/s, gen 16 tok @ 36.2 t/s (prompt 220 ms, gen 414 ms; reasoning=16, visible=0)
+  decode[1]: prompt 71 tok @ 875.1 t/s, gen 94 tok @ 37.0 t/s (prompt 81 ms, gen 2512 ms; reasoning=59, visible=35)
+  decode[2]: prompt 71 tok @ 882.2 t/s, gen 122 tok @ 36.9 t/s (prompt 80 ms, gen 3277 ms; reasoning=87, visible=35)
+  decode_avg_gen_t/s: 36.97
+  decode_avg_prefill_t/s: 878.68
+  long-prefill: prompt 1902 tok @ 1662.7 t/s, gen 64 tok @ 35.3 t/s (prompt 1144 ms, gen 1786 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 23471, 24463, 514
+
+=== qwen-bun ===
+overlay: qwen-bun.yml
+alias: qwen3.8-27b
+FAIL: container did not become healthy
+qwen-bun  | 0.00.091.798 W srv  llama_server: -----------------
+qwen-bun  | 0.00.091.800 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+qwen-bun  | 0.00.091.801 W srv  llama_server: this can be a security risk (cross-origin attacks)
+qwen-bun  | 0.00.091.801 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+qwen-bun  | 0.00.091.801 W srv  llama_server: -----------------
+qwen-bun  | 0.00.093.367 I srv    load_model: loading model '/models/Qwen3.8-27B-NVFP4-MTP-HIGH.gguf'
+qwen-bun  | 0.00.388.490 W model has unused tensor blk.64.attn_norm.weight (size = 20480 bytes) -- ignoring
+qwen-bun  | 0.00.388.497 W model has unused tensor blk.64.post_attention_norm.weight (size = 20480 bytes) -- ignoring
+qwen-bun  | 0.00.388.502 W model has unused tensor blk.64.attn_q.weight (size = 33423360 bytes) -- ignoring
+qwen-bun  | 0.00.388.504 W model has unused tensor blk.64.attn_k.weight (size = 2785280 bytes) -- ignoring
+qwen-bun  | 0.00.388.506 W model has unused tensor blk.64.attn_v.weight (size = 2785280 bytes) -- ignoring
+qwen-bun  | 0.00.388.511 W model has unused tensor blk.64.attn_output.weight (size = 16711680 bytes) -- ignoring
+qwen-bun  | 0.00.388.513 W model has unused tensor blk.64.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+qwen-bun  | 0.00.388.515 W model has unused tensor blk.64.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+qwen-bun  | 0.00.388.516 W model has unused tensor blk.64.ffn_gate.weight (size = 47349760 bytes) -- ignoring
+qwen-bun  | 0.00.388.518 W model has unused tensor blk.64.ffn_up.weight (size = 47349760 bytes) -- ignoring
+qwen-bun  | 0.00.388.520 W model has unused tensor blk.64.ffn_down.weight (size = 47349760 bytes) -- ignoring
+qwen-bun  | 0.00.388.523 W model has unused tensor blk.64.nextn.eh_proj.weight (size = 27852800 bytes) -- ignoring
+qwen-bun  | 0.00.388.526 W model has unused tensor blk.64.nextn.enorm.weight (size = 20480 bytes) -- ignoring
+qwen-bun  | 0.00.388.527 W model has unused tensor blk.64.nextn.hnorm.weight (size = 20480 bytes) -- ignoring
+qwen-bun  | 0.00.388.532 W model has unused tensor blk.64.nextn.shared_head_norm.weight (size = 20480 bytes) -- ignoring
+qwen-bun  | 0.00.425.064 E llama_model_load: error loading model: done_getting_tensors: wrong number of tensors; expected 1202, got 1034
+qwen-bun  | 0.00.425.104 E llama_model_load_from_file_impl: failed to load model
+qwen-bun  | libggml-base.so.0(+0x201b6)[0x7b308e6501b6]
+qwen-bun  | libggml-base.so.0(ggml_print_backtrace+0x21a)[0x7b308e65063a]
+qwen-bun  | libggml-base.so.0(+0x3641f)[0x7b308e66641f]
+qwen-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0xbb0da)[0x7b308fd730da]
+qwen-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(_ZSt10unexpectedv+0x0)[0x7b308fd5da55]
+qwen-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0xbb391)[0x7b308fd73391]
+qwen-bun  | libllama-common.so.0(+0x10b395)[0x7b308f5e6395]
+qwen-bun  | libllama-common.so.0(_ZN18common_init_resultC1ER13common_paramsb+0x94)[0x7b308f76d554]
+qwen-bun  | libllama-common.so.0(_Z23common_init_from_paramsR13common_paramsb+0xac)[0x7b308f771e9c]
+qwen-bun  | libllama-server-impl.so(_ZN19server_context_impl10load_modelER13common_params+0xa01)[0x7b30901b3a81]
+qwen-bun  | libllama-server-impl.so(_Z12llama_serverR13common_paramsiPPc+0x3d14)[0x7b3090078d64]
+qwen-bun  | libllama-server-impl.so(_Z12llama_serveriPPc+0x1447)[0x7b309007b677]
+qwen-bun  | /usr/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca)[0x7b308faa21ca]
+qwen-bun  | /usr/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b)[0x7b308faa228b]
+qwen-bun  | /app/llama-server(+0x1315)[0x61a2944f8315]
+qwen-bun  | terminate called after throwing an instance of 'std::runtime_error'
+qwen-bun  |   what():  failed to inspect model for automatic VBR codec selection
+SKIP/FAIL qwen-bun
+
+=== qwen-main ===
+overlay: qwen-main.yml
+alias: qwen3.8-27b
+vram_after_load_mib (used,total,free): 22567, 24463, 1418
+qwen-main  | 0.05.343.468 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 15  unused_mtp_bytes: 225712128 (215.3 MiB)
+  warmup: prompt 54 tok @ 170.0 t/s, gen 16 tok @ 38.1 t/s (prompt 318 ms, gen 394 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 132.2 t/s, gen 111 tok @ 38.4 t/s (prompt 219 ms, gen 2867 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 34.1 t/s, gen 117 tok @ 38.3 t/s (prompt 117 ms, gen 3030 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 38.33
+  decode_avg_prefill_t/s: 83.14
+  long-prefill: prompt 1902 tok @ 2235.7 t/s, gen 64 tok @ 38.1 t/s (prompt 851 ms, gen 1655 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 22933, 24463, 1052
+
+=== qwen-uncensored ===
+overlay: qwen-uncensored.yml
+alias: qwen3.8-27b-uncensored
+vram_after_load_mib (used,total,free): 23203, 24463, 782
+qwen-uncensored  | 0.12.291.265 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 15  unused_mtp_bytes: 849451008 (810.1 MiB)
+  warmup: prompt 54 tok @ 416.1 t/s, gen 16 tok @ 35.8 t/s (prompt 130 ms, gen 419 ms; reasoning=16, visible=0)
+  decode[1]: prompt 71 tok @ 835.8 t/s, gen 128 tok @ 36.5 t/s (prompt 85 ms, gen 3478 ms; reasoning=94, visible=34)
+  decode[2]: prompt 71 tok @ 860.3 t/s, gen 128 tok @ 36.6 t/s (prompt 83 ms, gen 3469 ms; reasoning=95, visible=33)
+  decode_avg_gen_t/s: 36.56
+  decode_avg_prefill_t/s: 848.06
+  long-prefill: prompt 1902 tok @ 1543.3 t/s, gen 64 tok @ 34.8 t/s (prompt 1232 ms, gen 1812 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 23373, 24463, 612
+
+=== qwen-uncensored-bun ===
+overlay: qwen-uncensored-bun.yml
+alias: qwen3.8-27b-uncensored
+FAIL: container did not become healthy
+qwen-uncensored-bun  | 0.00.100.899 W srv  llama_server: -----------------
+qwen-uncensored-bun  | 0.00.100.902 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+qwen-uncensored-bun  | 0.00.100.902 W srv  llama_server: this can be a security risk (cross-origin attacks)
+qwen-uncensored-bun  | 0.00.100.903 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+qwen-uncensored-bun  | 0.00.100.903 W srv  llama_server: -----------------
+qwen-uncensored-bun  | 0.00.102.479 I srv    load_model: loading model '/models/Qwen3.8-27B-huihui-NVFP4.gguf'
+qwen-uncensored-bun  | 0.00.406.650 W model has unused tensor blk.64.attn_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.656 W model has unused tensor blk.64.post_attention_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.660 W model has unused tensor blk.64.attn_q.weight (size = 125829120 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.662 W model has unused tensor blk.64.attn_k.weight (size = 10485760 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.664 W model has unused tensor blk.64.attn_v.weight (size = 10485760 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.669 W model has unused tensor blk.64.attn_output.weight (size = 62914560 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.671 W model has unused tensor blk.64.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.673 W model has unused tensor blk.64.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.674 W model has unused tensor blk.64.ffn_gate.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.676 W model has unused tensor blk.64.ffn_up.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.678 W model has unused tensor blk.64.ffn_down.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.681 W model has unused tensor blk.64.nextn.eh_proj.weight (size = 104857600 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.682 W model has unused tensor blk.64.nextn.enorm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.684 W model has unused tensor blk.64.nextn.hnorm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.406.689 W model has unused tensor blk.64.nextn.shared_head_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored-bun  | 0.00.443.747 E llama_model_load: error loading model: done_getting_tensors: wrong number of tensors; expected 1858, got 1362
+qwen-uncensored-bun  | 0.00.443.807 E llama_model_load_from_file_impl: failed to load model
+qwen-uncensored-bun  | libggml-base.so.0(+0x201b6)[0x73e0273361b6]
+qwen-uncensored-bun  | libggml-base.so.0(ggml_print_backtrace+0x21a)[0x73e02733663a]
+qwen-uncensored-bun  | libggml-base.so.0(+0x3641f)[0x73e02734c41f]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0xbb0da)[0x73e028a590da]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(_ZSt10unexpectedv+0x0)[0x73e028a43a55]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libstdc++.so.6(+0xbb391)[0x73e028a59391]
+qwen-uncensored-bun  | libllama-common.so.0(+0x10b395)[0x73e0282cc395]
+qwen-uncensored-bun  | libllama-common.so.0(_ZN18common_init_resultC1ER13common_paramsb+0x94)[0x73e028453554]
+qwen-uncensored-bun  | libllama-common.so.0(_Z23common_init_from_paramsR13common_paramsb+0xac)[0x73e028457e9c]
+qwen-uncensored-bun  | libllama-server-impl.so(_ZN19server_context_impl10load_modelER13common_params+0xa01)[0x73e028e99a81]
+qwen-uncensored-bun  | libllama-server-impl.so(_Z12llama_serverR13common_paramsiPPc+0x3d14)[0x73e028d5ed64]
+qwen-uncensored-bun  | libllama-server-impl.so(_Z12llama_serveriPPc+0x1447)[0x73e028d61677]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca)[0x73e0287881ca]
+qwen-uncensored-bun  | /usr/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b)[0x73e02878828b]
+qwen-uncensored-bun  | /app/llama-server(+0x1315)[0x64b92d486315]
+qwen-uncensored-bun  | terminate called after throwing an instance of 'std::runtime_error'
+qwen-uncensored-bun  |   what():  failed to inspect model for automatic VBR codec selection
+SKIP/FAIL qwen-uncensored-bun
+
+=== qwen-uncensored-main ===
+overlay: qwen-uncensored-main.yml
+alias: qwen3.8-27b-uncensored
+vram_after_load_mib (used,total,free): 22567, 24463, 1418
+qwen-uncensored-main  | 0.06.348.655 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 15  unused_mtp_bytes: 849451008 (810.1 MiB)
+  warmup: prompt 54 tok @ 215.8 t/s, gen 16 tok @ 37.8 t/s (prompt 250 ms, gen 396 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 130.2 t/s, gen 128 tok @ 38.1 t/s (prompt 223 ms, gen 3335 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 33.7 t/s, gen 128 tok @ 38.0 t/s (prompt 119 ms, gen 3340 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 38.05
+  decode_avg_prefill_t/s: 81.94
+  long-prefill: prompt 1902 tok @ 2167.6 t/s, gen 64 tok @ 37.7 t/s (prompt 877 ms, gen 1670 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 22835, 24463, 1150
+
+=== superqwen ===
+overlay: superqwen.yml
+alias: superqwen3.8-27b
+vram_after_load_mib (used,total,free): 22691, 24463, 1294
+superqwen  | 0.12.565.852 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 91 tok @ 534.7 t/s, gen 16 tok @ 34.4 t/s (prompt 170 ms, gen 436 ms; reasoning=16, visible=0)
+  decode[1]: prompt 108 tok @ 880.3 t/s, gen 74 tok @ 35.2 t/s (prompt 123 ms, gen 2076 ms; reasoning=39, visible=35)
+  decode[2]: prompt 108 tok @ 911.7 t/s, gen 65 tok @ 35.2 t/s (prompt 118 ms, gen 1817 ms; reasoning=30, visible=35)
+  decode_avg_gen_t/s: 35.19
+  decode_avg_prefill_t/s: 896.0
+  long-prefill: prompt 1939 tok @ 1130.2 t/s, gen 64 tok @ 34.1 t/s (prompt 1716 ms, gen 1848 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 22985, 24463, 1000
+
+=== superqwen-bun ===
+overlay: superqwen-bun.yml
+alias: superqwen3.8-27b
+vram_after_load_mib (used,total,free): 15975, 24463, 8010
+superqwen-bun  | 0.00.463.466 I VBR dynamic turbo runtime controller: KV budget auto (remaining VRAM, resolved by fit), entry tier f16, floor 1.25 bits/value, price-ordered decode-time degrades
+superqwen-bun  | 0.00.463.469 I cmn  common_param: VBR codec auto: selected turbo from model KV geometry
+superqwen-bun  | 0.00.498.285 I common_fit_params: VBR dynamic: fitting with KV priced at the turbo1_tcq floor tier
+superqwen-bun  | 0.00.752.262 I operator(): VBR dynamic: KV VRAM budget 9883 MiB (auto, from remaining memory) — decode-time degrade controller armed
+superqwen-bun  | 0.05.206.814 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 91 tok @ 332.3 t/s, gen 16 tok @ 36.7 t/s (prompt 274 ms, gen 409 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 196.8 t/s, gen 65 tok @ 38.0 t/s (prompt 147 ms, gen 1685 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 73.4 t/s, gen 128 tok @ 37.7 t/s (prompt 54 ms, gen 3373 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 37.82
+  decode_avg_prefill_t/s: 135.08
+  long-prefill: prompt 1939 tok @ 1518.6 t/s, gen 64 tok @ 37.0 t/s (prompt 1277 ms, gen 1702 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 16365, 24463, 7620
+
+=== superqwen-main ===
+overlay: superqwen-main.yml
+alias: superqwen3.8-27b
+vram_after_load_mib (used,total,free): 22183, 24463, 1802
+superqwen-main  | 0.03.245.082 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 91 tok @ 335.2 t/s, gen 16 tok @ 36.7 t/s (prompt 271 ms, gen 409 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 129.9 t/s, gen 128 tok @ 36.7 t/s (prompt 223 ms, gen 3461 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 32.9 t/s, gen 63 tok @ 36.7 t/s (prompt 122 ms, gen 1688 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 36.71
+  decode_avg_prefill_t/s: 81.42
+  long-prefill: prompt 1860 tok @ 1362.3 t/s, gen 64 tok @ 36.4 t/s (prompt 1365 ms, gen 1730 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 22323, 24463, 1662
+
+=== cybertiel ===
+overlay: cybertiel.yml
+alias: cyber-tiel-coder-35b
+vram_after_load_mib (used,total,free): 23403, 24463, 582
+cybertiel  | 0.17.013.219 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 20  unused_mtp_bytes: 389400576 (371.4 MiB)
+  warmup: prompt 230 tok @ 625.8 t/s, gen 16 tok @ 127.0 t/s (prompt 368 ms, gen 118 ms; reasoning=16, visible=0)
+  decode[1]: prompt 119 tok @ 741.8 t/s, gen 62 tok @ 143.8 t/s (prompt 160 ms, gen 424 ms; reasoning=27, visible=35)
+  decode[2]: prompt 119 tok @ 815.8 t/s, gen 62 tok @ 143.5 t/s (prompt 146 ms, gen 425 ms; reasoning=27, visible=35)
+  decode_avg_gen_t/s: 143.63
+  decode_avg_prefill_t/s: 778.82
+  long-prefill: prompt 1950 tok @ 2640.3 t/s, gen 64 tok @ 140.2 t/s (prompt 739 ms, gen 449 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 23641, 24463, 344
+
+=== cybertiel-bun ===
+overlay: cybertiel-bun.yml
+alias: cyber-tiel-coder-35b
+vram_after_load_mib (used,total,free): 21351, 24463, 2634
+cybertiel-bun  | 0.00.478.734 I VBR dynamic turbo runtime controller: KV budget auto (remaining VRAM, resolved by fit), entry tier f16, floor 1.25 bits/value, price-ordered decode-time degrades
+cybertiel-bun  | 0.00.478.735 I cmn  common_param: VBR codec auto: selected turbo from model KV geometry
+cybertiel-bun  | 0.00.512.124 I common_fit_params: VBR dynamic: fitting with KV priced at the turbo1_tcq floor tier
+cybertiel-bun  | 0.00.760.579 I operator(): VBR dynamic: KV VRAM budget 5046 MiB (auto, from remaining memory) — decode-time degrade controller armed
+cybertiel-bun  | 0.08.754.250 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 40  unused_mtp_bytes: 778801152 (742.7 MiB)
+  warmup: prompt 230 tok @ 827.1 t/s, gen 16 tok @ 146.6 t/s (prompt 278 ms, gen 102 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 386.7 t/s, gen 65 tok @ 160.1 t/s (prompt 75 ms, gen 400 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 226.9 t/s, gen 62 tok @ 163.5 t/s (prompt 18 ms, gen 373 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 161.77
+  decode_avg_prefill_t/s: 306.77
+  long-prefill: prompt 1860 tok @ 3675.5 t/s, gen 64 tok @ 163.4 t/s (prompt 506 ms, gen 386 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 21677, 24463, 2308
+
+=== cybertiel-main ===
+overlay: cybertiel-main.yml
+alias: cyber-tiel-coder-35b
+vram_after_load_mib (used,total,free): 23273, 24463, 712
+cybertiel-main  | 0.06.163.521 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 20  unused_mtp_bytes: 389400576 (371.4 MiB)
+  warmup: prompt 230 tok @ 868.0 t/s, gen 16 tok @ 151.3 t/s (prompt 265 ms, gen 99 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 294.6 t/s, gen 66 tok @ 155.7 t/s (prompt 98 ms, gen 417 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 76.0 t/s, gen 68 tok @ 157.1 t/s (prompt 53 ms, gen 426 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 156.41
+  decode_avg_prefill_t/s: 185.31
+  long-prefill: prompt 1860 tok @ 3571.7 t/s, gen 64 tok @ 158.2 t/s (prompt 521 ms, gen 398 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 23511, 24463, 474
+
+=== tiel ===
+overlay: tiel.yml
+alias: tiel-coder-35b
+vram_after_load_mib (used,total,free): 23403, 24463, 582
+tiel  | 0.17.577.053 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 229 tok @ 633.7 t/s, gen 16 tok @ 128.2 t/s (prompt 361 ms, gen 117 ms; reasoning=16, visible=0)
+  decode[1]: prompt 118 tok @ 732.3 t/s, gen 61 tok @ 142.3 t/s (prompt 161 ms, gen 422 ms; reasoning=26, visible=35)
+  decode[2]: prompt 118 tok @ 805.8 t/s, gen 65 tok @ 143.5 t/s (prompt 146 ms, gen 446 ms; reasoning=30, visible=35)
+  decode_avg_gen_t/s: 142.9
+  decode_avg_prefill_t/s: 769.04
+  long-prefill: prompt 1949 tok @ 2644.6 t/s, gen 64 tok @ 139.2 t/s (prompt 737 ms, gen 452 ms; reasoning=33, visible=31)
+vram_after_requests_mib (used,total,free): 23641, 24463, 344
+
+=== tiel-bun ===
+overlay: tiel-bun.yml
+alias: tiel-coder-35b
+vram_after_load_mib (used,total,free): 21351, 24463, 2634
+tiel-bun  | 0.00.520.215 I VBR dynamic turbo runtime controller: KV budget auto (remaining VRAM, resolved by fit), entry tier f16, floor 1.25 bits/value, price-ordered decode-time degrades
+tiel-bun  | 0.00.520.218 I cmn  common_param: VBR codec auto: selected turbo from model KV geometry
+tiel-bun  | 0.00.555.180 I common_fit_params: VBR dynamic: fitting with KV priced at the turbo1_tcq floor tier
+tiel-bun  | 0.00.801.667 I operator(): VBR dynamic: KV VRAM budget 5201 MiB (auto, from remaining memory) — decode-time degrade controller armed
+tiel-bun  | 0.08.709.121 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 229 tok @ 761.8 t/s, gen 16 tok @ 146.4 t/s (prompt 301 ms, gen 102 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 372.0 t/s, gen 58 tok @ 157.5 t/s (prompt 78 ms, gen 362 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 231.2 t/s, gen 62 tok @ 163.4 t/s (prompt 17 ms, gen 373 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 160.45
+  decode_avg_prefill_t/s: 301.61
+  long-prefill: prompt 1860 tok @ 3652.9 t/s, gen 64 tok @ 163.4 t/s (prompt 509 ms, gen 386 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 21677, 24463, 2308
+
+=== tiel-main ===
+overlay: tiel-main.yml
+alias: tiel-coder-35b
+vram_after_load_mib (used,total,free): 23273, 24463, 712
+tiel-main  | 0.04.017.059 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 229 tok @ 879.3 t/s, gen 16 tok @ 149.2 t/s (prompt 260 ms, gen 101 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 295.3 t/s, gen 62 tok @ 156.3 t/s (prompt 98 ms, gen 390 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 80.1 t/s, gen 61 tok @ 156.5 t/s (prompt 50 ms, gen 383 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 156.4
+  decode_avg_prefill_t/s: 187.72
+  long-prefill: prompt 1860 tok @ 3594.2 t/s, gen 64 tok @ 158.8 t/s (prompt 517 ms, gen 397 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 23511, 24463, 474
+
+=== genesis ===
+overlay: genesis.yml
+alias: tiel-coder-35b-genesis
+vram_after_load_mib (used,total,free): 22123, 24463, 1862
+genesis  | 0.16.095.001 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 229 tok @ 639.2 t/s, gen 16 tok @ 133.4 t/s (prompt 358 ms, gen 112 ms; reasoning=16, visible=0)
+  decode[1]: prompt 118 tok @ 842.0 t/s, gen 58 tok @ 155.3 t/s (prompt 140 ms, gen 367 ms; reasoning=23, visible=35)
+  decode[2]: prompt 118 tok @ 951.4 t/s, gen 72 tok @ 158.1 t/s (prompt 124 ms, gen 449 ms; reasoning=37, visible=35)
+  decode_avg_gen_t/s: 156.72
+  decode_avg_prefill_t/s: 896.7
+  long-prefill: prompt 1949 tok @ 3186.2 t/s, gen 64 tok @ 151.9 t/s (prompt 612 ms, gen 415 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 22359, 24463, 1626
+
+=== genesis-bun ===
+overlay: genesis-bun.yml
+alias: tiel-coder-35b-genesis
+vram_after_load_mib (used,total,free): 20071, 24463, 3914
+genesis-bun  | 0.00.482.117 I VBR dynamic turbo runtime controller: KV budget auto (remaining VRAM, resolved by fit), entry tier f16, floor 1.25 bits/value, price-ordered decode-time degrades
+genesis-bun  | 0.00.482.120 I cmn  common_param: VBR codec auto: selected turbo from model KV geometry
+genesis-bun  | 0.00.521.896 I common_fit_params: VBR dynamic: fitting with KV priced at the turbo1_tcq floor tier
+genesis-bun  | 0.00.773.886 I operator(): VBR dynamic: KV VRAM budget 6379 MiB (auto, from remaining memory) — decode-time degrade controller armed
+genesis-bun  | 0.07.716.022 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 229 tok @ 893.3 t/s, gen 16 tok @ 160.6 t/s (prompt 256 ms, gen 93 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 357.0 t/s, gen 62 tok @ 180.4 t/s (prompt 81 ms, gen 338 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 229.9 t/s, gen 62 tok @ 184.0 t/s (prompt 17 ms, gen 332 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 182.17
+  decode_avg_prefill_t/s: 293.47
+  long-prefill: prompt 1860 tok @ 4918.2 t/s, gen 64 tok @ 186.5 t/s (prompt 378 ms, gen 338 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 20295, 24463, 3690
+
+=== genesis-main ===
+overlay: genesis-main.yml
+alias: tiel-coder-35b-genesis
+vram_after_load_mib (used,total,free): 21993, 24463, 1992
+genesis-main  | 0.03.691.393 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 229 tok @ 891.6 t/s, gen 16 tok @ 162.3 t/s (prompt 257 ms, gen 92 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 283.7 t/s, gen 58 tok @ 174.7 t/s (prompt 102 ms, gen 326 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 82.7 t/s, gen 58 tok @ 175.5 t/s (prompt 48 ms, gen 325 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 175.11
+  decode_avg_prefill_t/s: 183.18
+  long-prefill: prompt 1860 tok @ 4641.7 t/s, gen 64 tok @ 179.1 t/s (prompt 401 ms, gen 352 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 22257, 24463, 1728
+
+import json, sys
+from collections import defaultdict
+rows = defaultdict(dict)
+for line in open(sys.argv[1]):
+    rec = json.loads(line)
+    t = rec.get("timings") or {}
+    key = rec["config"]
+    phase, rep = rec["phase"], rec["rep"]
+    gps = float(t.get("predicted_per_second") or 0)
+    pps = float(t.get("prompt_per_second") or 0)
+    pn = int(t.get("prompt_n") or 0)
+    if phase == "decode":
+        rows[key].setdefault("decode_gen", []).append(gps)
+        rows[key].setdefault("decode_prefill", []).append(pps)
+    elif phase == "prefill":
+        rows[key]["prefill_tok"] = pn
+        rows[key]["prefill_t/s"] = pps
+        rows[key]["prefill_gen"] = gps
+
+def avg(xs):
+    return sum(xs) / len(xs) if xs else 0.0
+
+print()
+print("=== table (decode gen t/s = mean of repeats; prefill = long prompt) ===")
+print(f"{'config':<28} {'decode t/s':>10} {'prefill t/s':>12} {'prefill tok':>12} {'prefill-gen':>12}")
+for key in sorted(rows):
+    r = rows[key]
+    print(f"{key:<28} {avg(r.get('decode_gen', [])):>10.2f} {r.get('prefill_t/s', 0):>12.1f} {r.get('prefill_tok', 0):>12d} {r.get('prefill_gen', 0):>12.1f}")
+raw timings: /home/marcel/LLM/scripts/speed-results/raw-20260916-154422.jsonl
+summary: /home/marcel/LLM/scripts/speed-results/summary-20260916-154422.txt
+done.
+
+=== table (decode gen t/s = mean of 2; prefill = ~1.9k summarize) ===
+config                       decode t/s  prefill t/s  prefill tok  prefill-gen
+qwen                              36.97       1662.7         1902         35.3
+qwen-bun                           FAIL                                       
+qwen-main                         38.33       2235.7         1902         38.1
+qwen-uncensored                   36.56       1543.3         1902         34.8
+qwen-uncensored-bun                FAIL                                       
+qwen-uncensored-main              38.05       2167.6         1902         37.7
+superqwen                         35.19       1130.2         1939         34.1
+superqwen-bun                     37.82       1518.6         1939         37.0
+superqwen-main                    36.71       1362.3         1860         36.4
+cybertiel                        143.63       2640.3         1950        140.2
+cybertiel-bun                    161.77       3675.5         1860        163.4
+cybertiel-main                   156.41       3571.7         1860        158.2
+tiel                             142.90       2644.6         1949        139.2
+tiel-bun                         160.45       3652.9         1860        163.4
+tiel-main                        156.40       3594.2         1860        158.8
+genesis                          156.72       3186.2         1949        151.9
+genesis-bun                      182.17       4918.2         1860        186.5
+genesis-main                     175.11       4641.7         1860        179.1
