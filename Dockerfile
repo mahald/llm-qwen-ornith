@@ -3,6 +3,7 @@
 #   GGML_NATIVE=ON          CPU backend with -march=native
 #   CMAKE_CUDA_ARCHITECTURES  only the host GPU (RTX 5090 Laptop = sm_120)
 #   GGML_CUDA_KVARN=ON      KVarN store + native CUDA FlashAttention
+#   GGML_SCHED_MAX_COPIES=1 single-GPU: skip pipeline-parallel input copies (default 4)
 #
 # GGML_CUDA_FA_ALL_QUANTS compiles every standard pair and all 36 KVarN
 # ordered pairs (needed for kvarn6/kvarn6 plus the F16 precision tail).
@@ -64,6 +65,7 @@ RUN if [ "${CUDA_DOCKER_ARCH}" = "native" ] && ! command -v nvidia-smi >/dev/nul
         -DGGML_CUDA_FA=ON \
         -DGGML_CUDA_FA_ALL_QUANTS=ON \
         -DGGML_CUDA_KVARN=ON \
+        -DGGML_SCHED_MAX_COPIES=1 \
         -DLLAMA_BUILD_TESTS=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_EXE_LINKER_FLAGS=-Wl,--allow-shlib-undefined . && \

@@ -1,0 +1,43 @@
+# Tiel-Coder 35B-A3B UD-Q4_K_XL — overlay for docker-compose.yml
+#
+# Non-MTP GGUF: this file has no nextn / draft head. Same serving shape
+# as cybertiel.yml: 2 slots, --no-mmproj, kvarn6/kvarn6 +
+# 1024-token F16 tail. 22.4 GB weights on 24 GB — snug; --fit-target 1024.
+#
+# Ornith-1.5 MoE ~3B active, Sharp chat template. Guardrailed sibling of
+# Cyber-Tiel.
+
+x-download:
+  repo: peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF
+  file: Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf
+  sha256: 9779b32f998371c66ae5e1aa9a0bc7ad946b1a36c61ea6a8eb39d523b4b19033
+
+services:
+  llm:
+    container_name: tiel
+    command: >
+      -m /models/Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf
+      -a tiel-coder-35b
+      --host 0.0.0.0
+      --port 8080
+      -ngl 99
+      -np 2
+      -c 262144
+      -ctk kvarn6
+      -ctv kvarn6
+      --kv-tail-tokens 1024
+      --kv-unified
+      --flash-attn on
+      --fit on
+      --fit-target 1024
+      --no-mmproj
+      --reasoning on
+      --reasoning-effort xhigh
+      --reasoning-preserve
+      --temp 0.6
+      --top-p 0.95
+      --top-k 20
+      --min-p 0.0
+      --presence-penalty 0.0
+      --repeat-penalty 1.0
+      -lv 3

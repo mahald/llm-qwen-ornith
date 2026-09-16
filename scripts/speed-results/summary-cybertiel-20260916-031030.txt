@@ -1,0 +1,60 @@
+BeeLlama.cpp  Cyber-Tiel-Coder 35B-A3B UD-Q4_K_XL  (no MTP, kvarn6/kvarn6)
+stamp: 20260916-031030
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+image: sha256:6d81c18c3eb2eaf77b8958e8c65bd36e359fae02eebb75cc8304f99aeba07600 2026-09-16T03:05:38.731015881+02:00
+file: Cyber-Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf
+alias: cyber-tiel-coder-35b  np=2
+decode prompt max_tokens=128 repeats=2
+MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024. GGML_SCHED_MAX_COPIES=1.
+
+Recreating cybertiel for a clean load…
+vram_after_load_mib (used,total,free): 23403, 24463, 581
+cybertiel  | 0.01.352.014 W model has unused tensor blk.40.attn_norm.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.01.352.020 W model has unused tensor blk.40.post_attention_norm.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.01.352.024 W model has unused tensor blk.40.attn_q.weight (size = 17825792 bytes) -- ignoring
+cybertiel  | 0.01.352.025 W model has unused tensor blk.40.attn_k.weight (size = 1114112 bytes) -- ignoring
+cybertiel  | 0.01.352.026 W model has unused tensor blk.40.attn_v.weight (size = 1114112 bytes) -- ignoring
+cybertiel  | 0.01.352.031 W model has unused tensor blk.40.attn_output.weight (size = 8912896 bytes) -- ignoring
+cybertiel  | 0.01.352.032 W model has unused tensor blk.40.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+cybertiel  | 0.01.352.033 W model has unused tensor blk.40.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+cybertiel  | 0.01.352.035 W model has unused tensor blk.40.ffn_gate_inp.weight (size = 2097152 bytes) -- ignoring
+cybertiel  | 0.01.352.036 W model has unused tensor blk.40.ffn_down_exps.weight (size = 115343360 bytes) -- ignoring
+cybertiel  | 0.01.352.038 W model has unused tensor blk.40.ffn_gate_exps.weight (size = 115343360 bytes) -- ignoring
+cybertiel  | 0.01.352.040 W model has unused tensor blk.40.ffn_up_exps.weight (size = 115343360 bytes) -- ignoring
+cybertiel  | 0.01.352.041 W model has unused tensor blk.40.ffn_gate_inp_shexp.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.01.352.043 W model has unused tensor blk.40.ffn_gate_shexp.weight (size = 1114112 bytes) -- ignoring
+cybertiel  | 0.01.352.044 W model has unused tensor blk.40.ffn_up_shexp.weight (size = 1114112 bytes) -- ignoring
+cybertiel  | 0.01.352.045 W model has unused tensor blk.40.ffn_down_shexp.weight (size = 1114112 bytes) -- ignoring
+cybertiel  | 0.01.352.049 W model has unused tensor blk.40.nextn.eh_proj.weight (size = 8912896 bytes) -- ignoring
+cybertiel  | 0.01.352.050 W model has unused tensor blk.40.nextn.enorm.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.01.352.052 W model has unused tensor blk.40.nextn.hnorm.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.01.352.056 W model has unused tensor blk.40.nextn.shared_head_norm.weight (size = 8192 bytes) -- ignoring
+cybertiel  | 0.19.859.316 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+n_slots/n_ctx: slots 2 n_ctx 262144
+
+--- warmup (thinking on, server default) ---
+  warmup: prompt 230 tok @ 596.0 t/s, gen 16 tok @ 120.5 t/s (prompt 386 ms, gen 124 ms; reasoning=16, visible=0)
+
+--- decode, thinking ON (same as compare.sh) ---
+  decode[1]: prompt 119 tok @ 706.7 t/s, gen 67 tok @ 135.7 t/s (prompt 168 ms, gen 486 ms; reasoning=32, visible=35)
+  decode[2]: prompt 119 tok @ 751.0 t/s, gen 65 tok @ 137.8 t/s (prompt 158 ms, gen 464 ms; reasoning=30, visible=35)
+  decode_avg_gen_t/s: 136.76
+  decode_avg_prefill_t/s: 728.83
+
+--- long-prefill, thinking ON ---
+  long-prefill: prompt 1950 tok @ 2527.5 t/s, gen 64 tok @ 130.9 t/s (prompt 772 ms, gen 481 ms; reasoning=64, visible=0)
+
+--- decode, thinking OFF ---
+  decode-off[1]: prompt 210 tok @ 1125.6 t/s, gen 34 tok @ 137.8 t/s (prompt 187 ms, gen 239 ms; reasoning=0, visible=34)
+  decode-off[2]: prompt 82 tok @ 559.2 t/s, gen 34 tok @ 141.0 t/s (prompt 147 ms, gen 234 ms; reasoning=0, visible=34)
+  decode_off_avg_gen_t/s: 139.4
+  decode_off_avg_prefill_t/s: 842.41
+
+--- long-prefill, thinking OFF ---
+  long-prefill-off: prompt 2041 tok @ 2632.6 t/s, gen 49 tok @ 118.2 t/s (prompt 775 ms, gen 406 ms; reasoning=0, visible=49)
+
+vram_after_requests_mib (used,total,free): 23641, 24463, 343
+raw timings: /home/marcel/LLM/scripts/speed-results/raw-cybertiel-20260916-031030.jsonl
+server log: /home/marcel/LLM/scripts/speed-results/cybertiel-20260916-031030.log
+summary: /home/marcel/LLM/scripts/speed-results/summary-cybertiel-20260916-031030.txt
+done. cybertiel left running.

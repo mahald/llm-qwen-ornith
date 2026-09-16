@@ -1,0 +1,40 @@
+BeeLlama.cpp  Qwen3.8-27B NVFP4 HIGH  (no MTP, kvarn6/kvarn6)
+stamp: 20260916-031329
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+image: sha256:6d81c18c3eb2eaf77b8958e8c65bd36e359fae02eebb75cc8304f99aeba07600 2026-09-16T03:05:38.731015881+02:00
+file: Qwen3.8-27B-NVFP4-MTP-HIGH.gguf
+alias: qwen3.8-27b  np=3
+decode prompt max_tokens=128 repeats=2
+MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024. GGML_SCHED_MAX_COPIES=1.
+
+Starting qwen (stops other models)…
+vram_after_load_mib (used,total,free): 23203, 24463, 781
+qwen  | 0.13.851.837 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+n_slots/n_ctx: slots 3 n_ctx 262144
+
+--- warmup (thinking on, server default) ---
+  warmup: prompt 54 tok @ 239.1 t/s, gen 16 tok @ 35.6 t/s (prompt 226 ms, gen 421 ms; reasoning=16, visible=0)
+
+--- decode, thinking ON (same as compare.sh) ---
+  decode[1]: prompt 71 tok @ 838.7 t/s, gen 128 tok @ 36.4 t/s (prompt 85 ms, gen 3494 ms; reasoning=112, visible=16)
+  decode[2]: prompt 71 tok @ 884.4 t/s, gen 81 tok @ 36.1 t/s (prompt 80 ms, gen 2217 ms; reasoning=46, visible=35)
+  decode_avg_gen_t/s: 36.22
+  decode_avg_prefill_t/s: 861.57
+
+--- long-prefill, thinking ON ---
+  long-prefill: prompt 1902 tok @ 1646.4 t/s, gen 64 tok @ 34.8 t/s (prompt 1155 ms, gen 1811 ms; reasoning=64, visible=0)
+
+--- decode, thinking OFF ---
+  decode-off[1]: prompt 31 tok @ 784.7 t/s, gen 34 tok @ 35.9 t/s (prompt 40 ms, gen 920 ms; reasoning=0, visible=34)
+  decode-off[2]: prompt 31 tok @ 788.0 t/s, gen 34 tok @ 36.1 t/s (prompt 39 ms, gen 913 ms; reasoning=0, visible=34)
+  decode_off_avg_gen_t/s: 36.0
+  decode_off_avg_prefill_t/s: 786.34
+
+--- long-prefill, thinking OFF ---
+  long-prefill-off: prompt 1862 tok @ 1623.2 t/s, gen 49 tok @ 33.9 t/s (prompt 1147 ms, gen 1414 ms; reasoning=0, visible=49)
+
+vram_after_requests_mib (used,total,free): 23471, 24463, 513
+raw timings: /home/marcel/LLM/scripts/speed-results/raw-qwen-20260916-031329.jsonl
+server log: /home/marcel/LLM/scripts/speed-results/qwen-20260916-031329.log
+summary: /home/marcel/LLM/scripts/speed-results/summary-qwen-20260916-031329.txt
+done. qwen left running.

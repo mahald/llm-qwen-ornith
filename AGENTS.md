@@ -1,14 +1,14 @@
 # Agent notes for ~/LLM
 
-One native **BeeLlama.cpp** image, four models, one GPU, one port. Keep the folder small.
+One native **BeeLlama.cpp** image, five models, one GPU, one port. Keep the folder small.
 
 ## Layout
 
 | Path | Role |
 |---|---|
 | `docker-compose.yml` | Shared stack (image, `gpus: all`, port 8080, CUDA require) |
-| `qwen.yml` / `qwen-uncensored.yml` / `superqwen.yml` / `ornith.yml` | Model overlays: `container_name`, `command`, `x-download` |
-| `llm` | One helper: `qwen` / `qwen-uncensored` / `superqwen` / `ornith` / `stop` / `build` / `download` |
+| `qwen.yml` / `qwen-uncensored.yml` / `superqwen.yml` / `cybertiel.yml` / `tiel.yml` | Model overlays: `container_name`, `command`, `x-download` |
+| `llm` | One helper: `qwen` / `qwen-uncensored` / `superqwen` / `cybertiel` / `tiel` / `stop` / `build` / `download` |
 | `Dockerfile` | Native CUDA 13.3.1 image `beellama:native` |
 | `models/` | GGUFs |
 | `scripts/` | Benchmarks only (`compare.sh`, `speed-results/`) |
@@ -21,7 +21,8 @@ Do not add extra Dockerfiles, `params.env`, `common.sh`, or extra start scripts.
 ./llm qwen
 ./llm qwen-uncensored
 ./llm superqwen
-./llm ornith
+./llm cybertiel
+./llm tiel
 ./llm stop
 ./llm build
 ./llm download
@@ -91,12 +92,12 @@ command:
 
 Put flag and value on the same line inside the `>` block (`-m /models/...`, `--fit-target 1024`). One flag per line. No quotes unless a value has spaces.
 
-`ornith.yml` is the same shape (`container_name: ornith`, `-np 2`, Ornith GGUF / alias). `qwen-uncensored.yml` is the Huihui abliterated NVFP4 sibling (`container_name: qwen-uncensored`, alias `qwen3.8-27b-uncensored`). `superqwen.yml` is SuperQwen3.8-27B abliterated Q4_K_M (`container_name: superqwen`, alias `superqwen3.8-27b`); its MTP draft is a separate GGUF we do not download.
+`qwen-uncensored.yml` is the Huihui abliterated NVFP4 sibling (`container_name: qwen-uncensored`, alias `qwen3.8-27b-uncensored`). `superqwen.yml` is SuperQwen3.8-27B abliterated Q4_K_M (`container_name: superqwen`, alias `superqwen3.8-27b`); its MTP draft is a separate GGUF we do not download. `cybertiel.yml` is the Huihui-abliterated Ornith-1.5 coder (`container_name: cybertiel`, `-np 2`, alias `cyber-tiel-coder-35b`, UD-Q4_K_XL); MTP stays off. `tiel.yml` is the guardrailed Sharp-template sibling (`container_name: tiel`, `-np 2`, alias `tiel-coder-35b`, UD-Q4_K_XL); that GGUF has no MTP head.
 
 ## Serving rules
 
-- **No MTP.** Do not pass `--spec-type`. The GGUFs still contain the draft head; 24 GB is not enough for it plus KVarN KV. Leave `nextn` tensors unloaded.
+- **No MTP.** Do not pass `--spec-type`. Most GGUFs still contain the draft head; 24 GB is not enough for it plus KVarN KV. Leave `nextn` tensors unloaded. `tiel.yml` has no head.
 - **KV cache:** `-ctk kvarn6` / `-ctv kvarn6`, `--kv-tail-tokens 1024` (BeeLlama KVarN + F16 precision tail). Not VBR (`-ct vbr` is buun-only).
 - **VRAM:** `-ngl 99`, `--fit on`, `--fit-target 1024` (~1 GB free on the RTX 5090 Laptop). Intel iGPU owns the desktop, so almost all 24 GB NVIDIA VRAM is for inference.
 - **Thinking:** `--reasoning on`, `--reasoning-effort xhigh`, `--reasoning-preserve` (Qwen3.8 top effort; SuperQwen's baked template defaults to `medium` without the flag). Compose also sets `LLAMA_ARG_REASONING=on`, `LLAMA_ARG_REASONING_EFFORT=xhigh`, `LLAMA_ARG_REASONING_PRESERVE=1`. omp/pi default thinking is `xhigh` and must send `reasoning_effort` (not only `enable_thinking`).
-- Image: `beellama:native` ([Anbeeld/beellama.cpp](https://github.com/Anbeeld/beellama.cpp), CUDA **13.3.1** toolkit, `sm_120`, `GGML_NATIVE=ON`, `GGML_CUDA_KVARN=ON`, `GGML_CUDA_FA_ALL_QUANTS=ON`, `NVIDIA_REQUIRE_CUDA=cuda>=13.2`). Rebuild with `./llm build`.
+- Image: `beellama:native` ([Anbeeld/beellama.cpp](https://github.com/Anbeeld/beellama.cpp), CUDA **13.3.1** toolkit, `sm_120`, `GGML_NATIVE=ON`, `GGML_CUDA_KVARN=ON`, `GGML_CUDA_FA_ALL_QUANTS=ON`, `GGML_SCHED_MAX_COPIES=1`, `NVIDIA_REQUIRE_CUDA=cuda>=13.2`). Rebuild with `./llm build`.

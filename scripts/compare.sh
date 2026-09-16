@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Sequential Qwen vs Ornith speed check. MTP off. Uses the same compose
-# overlays as ./llm qwen|ornith, on port 8080 (the live stack is stopped).
+# Sequential Qwen vs CyberTiel speed check. MTP off. Uses the same compose
+# overlays as ./llm qwen|cybertiel, on port 8080 (the live stack is stopped).
 #
 #   ./scripts/compare.sh
 set -euo pipefail
@@ -36,10 +36,10 @@ log() { printf '%s\n' "$*" | tee -a "$SUMMARY"; }
 
 down_all() {
     local y
-    for y in qwen.yml qwen-uncensored.yml superqwen.yml ornith.yml; do
+    for y in qwen.yml qwen-uncensored.yml superqwen.yml cybertiel.yml tiel.yml; do
         docker compose -f docker-compose.yml -f "$y" down --remove-orphans --timeout 20 >/dev/null 2>&1 || true
     done
-    docker rm -f qwen qwen-uncensored superqwen ornith llm-compare >/dev/null 2>&1 || true
+    docker rm -f qwen qwen-uncensored superqwen ornith cybertiel tiel llm-compare >/dev/null 2>&1 || true
 }
 
 gpu_mem() {
@@ -160,7 +160,7 @@ run_config() {
 }
 
 : >"$SUMMARY"
-log "BeeLlama.cpp  Qwen3.8-27B NVFP4 HIGH vs Ornith-1.5 35B-A3B  (no MTP, kvarn6/kvarn6)"
+log "BeeLlama.cpp  Qwen3.8-27B NVFP4 HIGH vs Cyber-Tiel-Coder 35B-A3B  (no MTP, kvarn6/kvarn6)"
 log "stamp: $STAMP"
 log "gpu: $(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader)"
 log "image: $IMAGE"
@@ -168,7 +168,7 @@ log "decode prompt max_tokens=${DECODE_MAX_TOKENS} repeats=${DECODE_REPEATS}"
 log "MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024."
 
 run_config qwen qwen.yml qwen3.8-27b || log "SKIP/FAIL qwen"
-run_config ornith ornith.yml ornith-1.5-35b || log "SKIP/FAIL ornith"
+run_config cybertiel cybertiel.yml cyber-tiel-coder-35b || log "SKIP/FAIL cybertiel"
 
 log ""
 log "raw timings: $RAW_JSONL"
@@ -176,4 +176,4 @@ log "summary: $SUMMARY"
 log "done."
 echo
 echo "Summary: $SUMMARY"
-echo "Stack is down. Start with ./llm qwen | qwen-uncensored | superqwen | ornith"
+echo "Stack is down. Start with ./llm qwen | qwen-uncensored | superqwen | cybertiel | tiel"
