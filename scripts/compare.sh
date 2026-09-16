@@ -7,7 +7,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-IMAGE=buun-llama:native
+IMAGE=beellama:native
 PORT=8080
 HEALTH_TIMEOUT=240
 WARMUP_MAX_TOKENS=16
@@ -118,7 +118,7 @@ run_config() {
     docker compose -f docker-compose.yml -f "$yml" logs >"$logf" 2>&1
 
     log "vram_after_load_mib (used,total,free): $(gpu_mem)"
-    grep -E 'VBR |common_fit|MoE cache fit|n_ctx_slot|n_slots' "$logf" | head -20 | tee -a "$SUMMARY" || true
+    grep -E 'KVarN|kvarn|common_fit|MoE cache fit|n_ctx_slot|n_slots|kv_size|KV cache|cache type|kv-tail' "$logf" | head -40 | tee -a "$SUMMARY" || true
 
     local tmp
     tmp=$(mktemp)
@@ -160,12 +160,12 @@ run_config() {
 }
 
 : >"$SUMMARY"
-log "buun-llama-cpp  Qwen3.8-27B NVFP4 HIGH vs Ornith-1.5 35B-A3B  (no MTP)"
+log "BeeLlama.cpp  Qwen3.8-27B NVFP4 HIGH vs Ornith-1.5 35B-A3B  (no MTP, kvarn6/kvarn6)"
 log "stamp: $STAMP"
 log "gpu: $(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader)"
 log "image: $IMAGE"
 log "decode prompt max_tokens=${DECODE_MAX_TOKENS} repeats=${DECODE_REPEATS}"
-log "MTP: off. --vbr-vram auto + --fit-target 1024: leftover VRAM goes to KV."
+log "MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024."
 
 run_config qwen qwen.yml qwen3.8-27b || log "SKIP/FAIL qwen"
 run_config ornith ornith.yml ornith-1.5-35b || log "SKIP/FAIL ornith"

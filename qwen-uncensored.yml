@@ -2,8 +2,8 @@
 #
 # Uncensored sibling of qwen.yml. Same serving shape: MTP OFF, no mmproj.
 # The GGUF still contains the draft head; without --spec-type it is never
-# loaded. 19.65 GB weights — tighter than HIGH, still fits 24 GB with
-# --fit-target 1024. 3 slots.
+# loaded. 19.65 GB weights — tighter than HIGH, still aims at 24 GB with
+# --fit-target 1024. 3 slots. kvarn6/kvarn6 + 1024-token F16 tail.
 
 x-download:
   repo: renketong/Huihui-Qwen3.8-27B-abliterated-NVFP4-GGUF
@@ -21,12 +21,17 @@ services:
       -ngl 99
       -np 3
       -c 262144
-      -ct vbr
+      -ctk kvarn6
+      -ctv kvarn6
+      --kv-tail-tokens 1024
       --kv-unified
-      --vbr-vram auto
+      --flash-attn on
       --fit on
       --fit-target 1024
       --no-mmproj
+      --reasoning on
+      --reasoning-effort xhigh
+      --reasoning-preserve
       --temp 0.6
       --top-p 0.95
       --top-k 20

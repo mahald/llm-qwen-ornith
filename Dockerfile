@@ -1,16 +1,16 @@
-# Native buun-llama-cpp for THIS machine.
+# Native BeeLlama.cpp for THIS machine.
 #
 #   GGML_NATIVE=ON          CPU backend with -march=native
 #   CMAKE_CUDA_ARCHITECTURES  only the host GPU (RTX 5090 Laptop = sm_120)
+#   GGML_CUDA_KVARN=ON      KVarN store + native CUDA FlashAttention
 #
-# GGML_CUDA_FA_ALL_QUANTS is required: without it the CMake glob skips the
-# TCQ flash-attention instances (turbo3_tcq / turbo2_tcq / turbo1_tcq) that
-# VBR degrades into.
+# GGML_CUDA_FA_ALL_QUANTS compiles every standard pair and all 36 KVarN
+# ordered pairs (needed for kvarn6/kvarn6 plus the F16 precision tail).
 #
-# --allow-shlib-undefined: VBR VMM pool calls the CUDA driver API
+# --allow-shlib-undefined: CUDA VMM pool calls the driver API
 # (cuMemAddressFree etc.). libcuda.so only exists at runtime.
 #
-# Host driver reports CUDA 13.2 (595.84). The 13.3.1 image default
+# Host driver reports CUDA 13.2 (595.x). The 13.3.1 image default
 # NVIDIA_REQUIRE_CUDA is cuda>=13.3 and would refuse to start. We override
 # to cuda>=13.2. Use ./llm build — a plain `docker build` cannot resolve
 # "native" CUDA architectures unless the daemon's default runtime is nvidia.
@@ -20,8 +20,8 @@ ARG CUDA_VERSION=13.3.1
 
 FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu${UBUNTU_VERSION} AS build
 
-ARG LLAMACPP_REPO=https://github.com/spiritbuun/buun-llama-cpp
-ARG LLAMACPP_REF=master
+ARG LLAMACPP_REPO=https://github.com/Anbeeld/beellama.cpp
+ARG LLAMACPP_REF=main
 ARG CUDA_DOCKER_ARCH=native
 ARG GGML_NATIVE=ON
 
@@ -38,6 +38,19 @@ RUN git init -q . && \
     git checkout -q FETCH_HEAD && \
     git log -1 --oneline
 
+# SM120 dense-FP8 CUTLASS FFN does not compile with CUDA 13.3.1 + gcc-14
+# (Base::Arguments is not a class-name). Served GGUFs are NVFP4 / Q4_K_M.
+# BeeLlama may glob the .cu unconditionally; skip the file if present.
+RUN if [ -f ggml/src/ggml-cuda/fp8-cutlass-ffn-sm120.cu ]; then \
+        mv ggml/src/ggml-cuda/fp8-cutlass-ffn-sm120.cu \
+           ggml/src/ggml-cuda/fp8-cutlass-ffn-sm120.cu.skip; \
+    fi && \
+    if grep -q 'CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8 AND' \
+            ggml/src/ggml-cuda/CMakeLists.txt; then \
+        sed -i 's/if (CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8 AND/if (FALSE AND CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8 AND/' \
+            ggml/src/ggml-cuda/CMakeLists.txt; \
+    fi
+
 RUN if [ "${CUDA_DOCKER_ARCH}" = "native" ] && ! command -v nvidia-smi >/dev/null 2>&1; then \
         echo "ERROR: CUDA_DOCKER_ARCH=native, but no GPU is visible inside the build container." >&2; \
         echo "       Use ./llm build (it detects the compute capability on the host)," >&2; \
@@ -50,6 +63,7 @@ RUN if [ "${CUDA_DOCKER_ARCH}" = "native" ] && ! command -v nvidia-smi >/dev/nul
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_DOCKER_ARCH} \
         -DGGML_CUDA_FA=ON \
         -DGGML_CUDA_FA_ALL_QUANTS=ON \
+        -DGGML_CUDA_KVARN=ON \
         -DLLAMA_BUILD_TESTS=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_EXE_LINKER_FLAGS=-Wl,--allow-shlib-undefined . && \
@@ -71,6 +85,9 @@ COPY --from=build /app/build/bin/llama-server /app
 # Host driver is CUDA 13.2; image default is cuda>=13.3.
 ENV NVIDIA_REQUIRE_CUDA="cuda>=13.2"
 ENV LLAMA_ARG_HOST=0.0.0.0
+ENV LLAMA_ARG_REASONING=on
+ENV LLAMA_ARG_REASONING_EFFORT=xhigh
+ENV LLAMA_ARG_REASONING_PRESERVE=1
 WORKDIR /app
 HEALTHCHECK CMD [ "curl", "-f", "http://localhost:8080/health" ]
 ENTRYPOINT [ "/app/llama-server" ]

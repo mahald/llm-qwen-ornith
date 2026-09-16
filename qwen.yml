@@ -1,10 +1,10 @@
 # Qwen3.8-27B NVFP4 HIGH — overlay for docker-compose.yml
 #
 # MTP is OFF. The GGUF still contains the draft head; without --spec-type it
-# is never loaded. 24 GB VRAM is not enough for MTP + a useful VBR KV cache.
+# is never loaded. 24 GB VRAM is not enough for MTP + a useful KVarN cache.
 #
-# Dense 27B, ~16 GB weights. VBR auto takes the rest minus --fit-target 1024
-# (~1 GB headroom on the RTX 5090 Laptop). 3 slots.
+# Dense 27B, ~16 GB weights. kvarn6/kvarn6 + 1024-token F16 tail. Fit keeps
+# ~1 GB free (--fit-target 1024) on the RTX 5090 Laptop. 3 slots.
 
 x-download:
   repo: esatapedico/Qwen3.8-27B-NVFP4-MTP-GGUF
@@ -22,12 +22,17 @@ services:
       -ngl 99
       -np 3
       -c 262144
-      -ct vbr
+      -ctk kvarn6
+      -ctv kvarn6
+      --kv-tail-tokens 1024
       --kv-unified
-      --vbr-vram auto
+      --flash-attn on
       --fit on
       --fit-target 1024
       --no-mmproj
+      --reasoning on
+      --reasoning-effort xhigh
+      --reasoning-preserve
       --temp 0.6
       --top-p 0.95
       --top-k 20

@@ -3,6 +3,7 @@
 # Text-only target GGUF. MTP draft and mmproj are separate files in the
 # same HF repo; we do not download or load them. Same serving shape as
 # qwen.yml: MTP OFF, --no-mmproj, 3 slots, --fit-target 1024.
+# kvarn6/kvarn6 + 1024-token F16 tail.
 
 x-download:
   repo: Jiunsong/SuperQwen3.8-27b-abliterated-GGUF
@@ -20,12 +21,17 @@ services:
       -ngl 99
       -np 3
       -c 262144
-      -ct vbr
+      -ctk kvarn6
+      -ctv kvarn6
+      --kv-tail-tokens 1024
       --kv-unified
-      --vbr-vram auto
+      --flash-attn on
       --fit on
       --fit-target 1024
       --no-mmproj
+      --reasoning on
+      --reasoning-effort xhigh
+      --reasoning-preserve
       --temp 0.6
       --top-p 0.95
       --top-k 20

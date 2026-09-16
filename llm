@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-IMAGE=buun-llama:native
+IMAGE=beellama:native
 COMPOSE=(docker compose -f docker-compose.yml)
 
 usage() {
@@ -38,11 +38,11 @@ do_build() {
            | tr -d ' .' | sort -u | paste -sd';' -)
     [[ -n "$arch" ]] || { echo "Could not read compute capability." >&2; exit 1; }
     echo "GPU compute capability: ${arch}"
-    echo "Building ${IMAGE} (CPU: -march=native, CUDA: sm_${arch//;/, sm_}, toolkit 13.3.1, buun master)"
+    echo "Building ${IMAGE} (CPU: -march=native, CUDA: sm_${arch//;/, sm_}, toolkit 13.3.1, BeeLlama main)"
     docker build \
         --build-arg CUDA_DOCKER_ARCH="${arch}" \
         --build-arg GGML_NATIVE=ON \
-        --build-arg LLAMACPP_REF=master \
+        --build-arg LLAMACPP_REF=main \
         -t "$IMAGE" \
         .
 }
