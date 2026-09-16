@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One helper: ./llm qwen | qwen-uncensored | superqwen | cybertiel | tiel | stop | build | download
+# One helper: ./llm qwen | qwen-uncensored | superqwen | cybertiel | tiel | genesis | stop | build | download
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -7,16 +7,16 @@ IMAGE=beellama:native
 COMPOSE=(docker compose -f docker-compose.yml)
 
 usage() {
-    echo "usage: $0 qwen | qwen-uncensored | superqwen | cybertiel | tiel | stop | build | download" >&2
+    echo "usage: $0 qwen | qwen-uncensored | superqwen | cybertiel | tiel | genesis | stop | build | download" >&2
     exit 1
 }
 
 down_all() {
     local y
-    for y in qwen.yml qwen-uncensored.yml superqwen.yml cybertiel.yml tiel.yml; do
+    for y in qwen.yml qwen-uncensored.yml superqwen.yml cybertiel.yml tiel.yml genesis.yml; do
         "${COMPOSE[@]}" -f "$y" down --remove-orphans --timeout 20 >/dev/null 2>&1 || true
     done
-    docker rm -f qwen qwen-uncensored superqwen ornith cybertiel tiel llm-compare >/dev/null 2>&1 || true
+    docker rm -f qwen qwen-uncensored superqwen ornith cybertiel tiel genesis llm-compare >/dev/null 2>&1 || true
 }
 
 up_model() {
@@ -122,6 +122,7 @@ do_download() {
     check_one superqwen.yml
     check_one cybertiel.yml
     check_one tiel.yml
+    check_one genesis.yml
     echo
     echo "Done. models/ is ready."
 }
@@ -133,6 +134,7 @@ case "$cmd" in
     superqwen)         up_model superqwen.yml ;;
     cybertiel)         up_model cybertiel.yml ;;
     tiel)              up_model tiel.yml ;;
+    genesis)           up_model genesis.yml ;;
     stop)
         down_all
         echo "Stopped."

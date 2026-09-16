@@ -1,10 +1,12 @@
 # Qwen3.8-27B NVFP4 HIGH — overlay for docker-compose.yml
 #
-# MTP is OFF. The GGUF still contains the draft head; without --spec-type it
-# is never loaded. 24 GB VRAM is not enough for MTP + a useful KVarN cache.
+# MTP is OFF. The GGUF still contains blk.64 (IQ4_XS, 215 MiB); without
+# --spec-type llama-server ignores that whole block. 24 GB VRAM is not
+# enough for MTP + a useful KVarN cache.
 #
-# Dense 27B, ~16 GB weights. kvarn6/kvarn6 + 1024-token F16 tail. Fit keeps
-# ~1 GB free (--fit-target 1024) on the RTX 5090 Laptop. 3 slots.
+# Dense 27B, 17.57 GB on disk / 17.35 GB loaded. kvarn6/kvarn6 + 1024-token
+# F16 tail. Fit keeps ~1 GB free (--fit-target 1024) on the RTX 5090 Laptop.
+# 3 slots.
 
 x-download:
   repo: esatapedico/Qwen3.8-27B-NVFP4-MTP-GGUF

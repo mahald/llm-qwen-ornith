@@ -1,8 +1,9 @@
 # SuperQwen3.8-27B abliterated Q4_K_M — overlay for docker-compose.yml
 #
-# Text-only target GGUF. MTP draft and mmproj are separate files in the
-# same HF repo; we do not download or load them. Same serving shape as
-# qwen.yml: MTP OFF, --no-mmproj, 3 slots, --fit-target 1024.
+# Text-only target GGUF (16.55 GB / 15.41 GiB, no nextn in this file).
+# MTP draft (1.56 GiB Q4_0) and mmproj are separate files in the same HF
+# repo; we do not download or load them. Same serving shape as qwen.yml:
+# MTP OFF, --no-mmproj, 3 slots, --fit-target 1024.
 # kvarn6/kvarn6 + 1024-token F16 tail.
 
 x-download:

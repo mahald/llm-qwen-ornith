@@ -1,0 +1,54 @@
+BeeLlama.cpp  qwen-uncensored superqwen tiel  (no MTP, kvarn6/kvarn6)
+stamp: 20260916-135246
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+image: sha256:6d81c18c3eb2eaf77b8958e8c65bd36e359fae02eebb75cc8304f99aeba07600 2026-09-16T03:05:38.731015881+02:00
+decode prompt max_tokens=128 repeats=2
+MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024. GGML_SCHED_MAX_COPIES=1.
+thinking: server default (xhigh). Same /v1/chat/completions path as omp/pi.
+
+=== qwen-uncensored ===
+overlay: qwen-uncensored.yml
+alias: qwen3.8-27b-uncensored
+vram_after_load_mib (used,total,free): 23141, 24463, 843
+qwen-uncensored  | 0.01.123.793 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+qwen-uncensored  | 0.13.534.736 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 15  unused_mtp_bytes: 849451008 (810.1 MiB)
+  warmup: prompt 54 tok @ 379.2 t/s, gen 16 tok @ 34.5 t/s (prompt 142 ms, gen 434 ms; reasoning=16, visible=0)
+  decode[1]: prompt 71 tok @ 771.7 t/s, gen 128 tok @ 35.5 t/s (prompt 92 ms, gen 3581 ms; reasoning=95, visible=33)
+  decode[2]: prompt 71 tok @ 855.3 t/s, gen 128 tok @ 35.8 t/s (prompt 83 ms, gen 3545 ms; reasoning=110, visible=18)
+  decode_avg_gen_t/s: 35.64
+  decode_avg_prefill_t/s: 813.53
+  long-prefill: prompt 1902 tok @ 1594.6 t/s, gen 64 tok @ 34.4 t/s (prompt 1193 ms, gen 1833 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 23311, 24463, 673
+
+=== superqwen ===
+overlay: superqwen.yml
+alias: superqwen3.8-27b
+vram_after_load_mib (used,total,free): 22691, 24463, 1293
+superqwen  | 0.12.499.141 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 91 tok @ 514.3 t/s, gen 16 tok @ 33.5 t/s (prompt 177 ms, gen 448 ms; reasoning=16, visible=0)
+  decode[1]: prompt 108 tok @ 866.2 t/s, gen 62 tok @ 34.8 t/s (prompt 125 ms, gen 1755 ms; reasoning=27, visible=35)
+  decode[2]: prompt 108 tok @ 908.9 t/s, gen 62 tok @ 34.9 t/s (prompt 119 ms, gen 1747 ms; reasoning=27, visible=35)
+  decode_avg_gen_t/s: 34.84
+  decode_avg_prefill_t/s: 887.55
+  long-prefill: prompt 1939 tok @ 1111.0 t/s, gen 64 tok @ 32.9 t/s (prompt 1745 ms, gen 1916 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 22985, 24463, 999
+
+=== tiel ===
+overlay: tiel.yml
+alias: tiel-coder-35b
+vram_after_load_mib (used,total,free): 23403, 24463, 582
+tiel  | 0.16.916.507 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 229 tok @ 584.7 t/s, gen 16 tok @ 125.8 t/s (prompt 392 ms, gen 119 ms; reasoning=16, visible=0)
+  decode[1]: prompt 118 tok @ 703.3 t/s, gen 72 tok @ 140.9 t/s (prompt 168 ms, gen 504 ms; reasoning=37, visible=35)
+  decode[2]: prompt 118 tok @ 762.3 t/s, gen 69 tok @ 140.7 t/s (prompt 155 ms, gen 483 ms; reasoning=34, visible=35)
+  decode_avg_gen_t/s: 140.8
+  decode_avg_prefill_t/s: 732.81
+  long-prefill: prompt 1949 tok @ 2529.5 t/s, gen 64 tok @ 133.5 t/s (prompt 771 ms, gen 472 ms; reasoning=23, visible=41)
+vram_after_requests_mib (used,total,free): 23641, 24463, 344
+
+raw timings: /home/marcel/LLM/scripts/speed-results/raw-20260916-135246.jsonl
+summary: /home/marcel/LLM/scripts/speed-results/summary-20260916-135246.txt
+done.

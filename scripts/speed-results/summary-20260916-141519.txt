@@ -1,0 +1,25 @@
+BeeLlama.cpp  genesis  (no MTP, kvarn6/kvarn6)
+stamp: 20260916-141519
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+image: sha256:6d81c18c3eb2eaf77b8958e8c65bd36e359fae02eebb75cc8304f99aeba07600 2026-09-16T03:05:38.731015881+02:00
+decode prompt max_tokens=128 repeats=2
+MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024. GGML_SCHED_MAX_COPIES=1.
+thinking: server default (xhigh). Same /v1/chat/completions path as omp/pi.
+
+=== genesis ===
+overlay: genesis.yml
+alias: tiel-coder-35b-genesis
+vram_after_load_mib (used,total,free): 22123, 24463, 1861
+genesis  | 0.07.285.306 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 229 tok @ 660.8 t/s, gen 16 tok @ 133.2 t/s (prompt 347 ms, gen 113 ms; reasoning=16, visible=0)
+  decode[1]: prompt 118 tok @ 856.5 t/s, gen 62 tok @ 156.3 t/s (prompt 138 ms, gen 390 ms; reasoning=27, visible=35)
+  decode[2]: prompt 118 tok @ 934.2 t/s, gen 58 tok @ 157.6 t/s (prompt 126 ms, gen 362 ms; reasoning=23, visible=35)
+  decode_avg_gen_t/s: 156.95
+  decode_avg_prefill_t/s: 895.36
+  long-prefill: prompt 1949 tok @ 3206.0 t/s, gen 64 tok @ 153.9 t/s (prompt 608 ms, gen 409 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 22359, 24463, 1625
+
+raw timings: /home/marcel/LLM/scripts/speed-results/raw-20260916-141519.jsonl
+summary: /home/marcel/LLM/scripts/speed-results/summary-20260916-141519.txt
+done.

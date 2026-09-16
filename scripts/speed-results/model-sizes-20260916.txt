@@ -1,0 +1,251 @@
+BeeLlama.cpp model inventory — disk + MTP + loaded-without-MTP
+stamp: 2026-09-16T13:43:45+02:00
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+image: sha256:6d81c18c3eb2eaf77b8958e8c65bd36e359fae02eebb75cc8304f99aeba07600 2026-09-16T03:05:38.731015881+02:00
+method: GGUF tensor offsets for disk; llama-server unused-tensor lines for load-without-MTP
+serving: MTP off (no --spec-type), -ctk/v kvarn6, --fit-target 1024
+
+=== disk / GGUF tensor inventory ===
+
+## qwen
+file: Qwen3.8-27B-NVFP4-MTP-HIGH.gguf
+name: Qwen3.8 27B NVFP4 MTP HIGH
+arch: qwen35  block_count=65  nextn_predict_layers=1  tensors=1202  gguf_v=3
+disk: 17,570,799,040 B  (17.571 GB / 16.364 GiB / 16756.8 MiB)
+MTP in file: yes
+MTP tensors: 15  types={'IQ4_XS': 8, 'F32': 7}
+MTP bytes: 225,712,128 B  (0.226 GB / 0.210 GiB / 215.3 MiB)  (1.28% of file)
+body without MTP: 17,345,086,912 B  (17.345 GB / 16.154 GiB / 16541.6 MiB)
+     2,785,280  IQ4_XS    blk.64.attn_k.weight
+         1,024  F32       blk.64.attn_k_norm.weight
+        20,480  F32       blk.64.attn_norm.weight
+    16,711,680  IQ4_XS    blk.64.attn_output.weight
+    33,423,360  IQ4_XS    blk.64.attn_q.weight
+         1,024  F32       blk.64.attn_q_norm.weight
+     2,785,280  IQ4_XS    blk.64.attn_v.weight
+    47,349,760  IQ4_XS    blk.64.ffn_down.weight
+    47,349,760  IQ4_XS    blk.64.ffn_gate.weight
+    47,349,760  IQ4_XS    blk.64.ffn_up.weight
+    27,852,800  IQ4_XS    blk.64.nextn.eh_proj.weight
+        20,480  F32       blk.64.nextn.enorm.weight
+        20,480  F32       blk.64.nextn.hnorm.weight
+        20,480  F32       blk.64.nextn.shared_head_norm.weight
+        20,480  F32       blk.64.post_attention_norm.weight
+
+## qwen-uncensored
+file: Qwen3.8-27B-huihui-NVFP4.gguf
+name: Huihui Qwen3.8 27B Abliterated NVFP4
+arch: qwen35  block_count=65  nextn_predict_layers=1  tensors=1858  gguf_v=3
+disk: 19,653,896,288 B  (19.654 GB / 18.304 GiB / 18743.4 MiB)
+MTP in file: yes
+MTP tensors: 15  types={'BF16': 8, 'F32': 7}
+MTP bytes: 849,451,008 B  (0.849 GB / 0.791 GiB / 810.1 MiB)  (4.32% of file)
+body without MTP: 18,804,445,280 B  (18.804 GB / 17.513 GiB / 17933.3 MiB)
+   104,857,600  BF16      blk.64.nextn.eh_proj.weight
+        20,480  F32       blk.64.attn_norm.weight
+   178,257,920  BF16      blk.64.ffn_down.weight
+   178,257,920  BF16      blk.64.ffn_gate.weight
+   178,257,920  BF16      blk.64.ffn_up.weight
+        20,480  F32       blk.64.post_attention_norm.weight
+         1,024  F32       blk.64.attn_k_norm.weight
+    10,485,760  BF16      blk.64.attn_k.weight
+    62,914,560  BF16      blk.64.attn_output.weight
+         1,024  F32       blk.64.attn_q_norm.weight
+   125,829,120  BF16      blk.64.attn_q.weight
+    10,485,760  BF16      blk.64.attn_v.weight
+        20,480  F32       blk.64.nextn.shared_head_norm.weight
+        20,480  F32       blk.64.nextn.enorm.weight
+        20,480  F32       blk.64.nextn.hnorm.weight
+
+## superqwen
+file: SuperQwen3.8-27b-abliterated-Q4_K_M.gguf
+name: SuperQwen3.8-27b-abliterated
+arch: qwen35  block_count=64  nextn_predict_layers=0  tensors=851  gguf_v=3
+disk: 16,547,400,704 B  (16.547 GB / 15.411 GiB / 15780.8 MiB)
+MTP in file: no
+MTP bytes: 0
+body without MTP: 16,547,400,704 B  (16.547 GB / 15.411 GiB / 15780.8 MiB)  (same as disk)
+
+## cybertiel
+file: Cyber-Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf
+name: Huihui Ornith 1.5 35B A3B Abliterated
+arch: qwen35moe  block_count=41  nextn_predict_layers=1  tensors=753  gguf_v=3
+disk: 22,749,880,640 B  (22.750 GB / 21.187 GiB / 21696.0 MiB)
+MTP in file: yes
+MTP tensors: 20  types={'Q8_0': 8, 'F32': 9, 'Q3_K': 3}
+MTP bytes: 389,400,576 B  (0.389 GB / 0.363 GiB / 371.4 MiB)  (1.71% of file)
+body without MTP: 22,360,480,064 B  (22.360 GB / 20.825 GiB / 21324.6 MiB)
+     1,114,112  Q8_0      blk.40.attn_k.weight
+         1,024  F32       blk.40.attn_k_norm.weight
+         8,192  F32       blk.40.attn_norm.weight
+     8,912,896  Q8_0      blk.40.attn_output.weight
+    17,825,792  Q8_0      blk.40.attn_q.weight
+         1,024  F32       blk.40.attn_q_norm.weight
+     1,114,112  Q8_0      blk.40.attn_v.weight
+   115,343,360  Q3_K      blk.40.ffn_down_exps.weight
+     1,114,112  Q8_0      blk.40.ffn_down_shexp.weight
+   115,343,360  Q3_K      blk.40.ffn_gate_exps.weight
+     2,097,152  F32       blk.40.ffn_gate_inp.weight
+         8,192  F32       blk.40.ffn_gate_inp_shexp.weight
+     1,114,112  Q8_0      blk.40.ffn_gate_shexp.weight
+   115,343,360  Q3_K      blk.40.ffn_up_exps.weight
+     1,114,112  Q8_0      blk.40.ffn_up_shexp.weight
+     8,912,896  Q8_0      blk.40.nextn.eh_proj.weight
+         8,192  F32       blk.40.nextn.enorm.weight
+         8,192  F32       blk.40.nextn.hnorm.weight
+         8,192  F32       blk.40.nextn.shared_head_norm.weight
+         8,192  F32       blk.40.post_attention_norm.weight
+
+## tiel
+file: Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf
+name: Ornith-1.5-35B
+arch: qwen35moe  block_count=40  nextn_predict_layers=0  tensors=733  gguf_v=3
+disk: 22,360,478,080 B  (22.360 GB / 20.825 GiB / 21324.6 MiB)
+MTP in file: no
+MTP bytes: 0
+body without MTP: 22,360,478,080 B  (22.360 GB / 20.825 GiB / 21324.6 MiB)  (same as disk)
+
+=== live serving (MTP off) ===
+
+=== live load: superqwen ===
+container: running healthy=healthy
+vram_after_load_mib: 23297 MiB, 24463 MiB, 687 MiB
+unused tensors:
+  (none)
+unused byte sum:
+count=0 bytes=0 (0.000 GB / 0.0 MiB)
+load lines:
+0.00.229.075 I srv    load_model: loading model '/models/SuperQwen3.8-27b-abliterated-Q4_K_M.gguf'
+0.11.934.792 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+0.11.941.910 I srv  llama_server: model loaded
+
+=== live load: qwen-uncensored ===
+container: running healthy=healthy
+vram_after_load_mib: 23141 MiB, 24463 MiB, 843 MiB
+unused tensors:
+0.01.210.632 W model has unused tensor blk.64.attn_norm.weight (size = 20480 bytes) -- ignoring
+0.01.210.638 W model has unused tensor blk.64.post_attention_norm.weight (size = 20480 bytes) -- ignoring
+0.01.210.642 W model has unused tensor blk.64.attn_q.weight (size = 125829120 bytes) -- ignoring
+0.01.210.644 W model has unused tensor blk.64.attn_k.weight (size = 10485760 bytes) -- ignoring
+0.01.210.646 W model has unused tensor blk.64.attn_v.weight (size = 10485760 bytes) -- ignoring
+0.01.210.651 W model has unused tensor blk.64.attn_output.weight (size = 62914560 bytes) -- ignoring
+0.01.210.653 W model has unused tensor blk.64.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+0.01.210.654 W model has unused tensor blk.64.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+0.01.210.656 W model has unused tensor blk.64.ffn_gate.weight (size = 178257920 bytes) -- ignoring
+0.01.210.657 W model has unused tensor blk.64.ffn_down.weight (size = 178257920 bytes) -- ignoring
+0.01.210.659 W model has unused tensor blk.64.ffn_up.weight (size = 178257920 bytes) -- ignoring
+0.01.210.662 W model has unused tensor blk.64.nextn.eh_proj.weight (size = 104857600 bytes) -- ignoring
+0.01.210.663 W model has unused tensor blk.64.nextn.enorm.weight (size = 20480 bytes) -- ignoring
+0.01.210.665 W model has unused tensor blk.64.nextn.hnorm.weight (size = 20480 bytes) -- ignoring
+0.01.210.669 W model has unused tensor blk.64.nextn.shared_head_norm.weight (size = 20480 bytes) -- ignoring
+unused byte sum:
+        20,480  blk.64.attn_norm.weight
+        20,480  blk.64.post_attention_norm.weight
+   125,829,120  blk.64.attn_q.weight
+    10,485,760  blk.64.attn_k.weight
+    10,485,760  blk.64.attn_v.weight
+    62,914,560  blk.64.attn_output.weight
+         1,024  blk.64.attn_q_norm.weight
+         1,024  blk.64.attn_k_norm.weight
+   178,257,920  blk.64.ffn_gate.weight
+   178,257,920  blk.64.ffn_down.weight
+   178,257,920  blk.64.ffn_up.weight
+   104,857,600  blk.64.nextn.eh_proj.weight
+        20,480  blk.64.nextn.enorm.weight
+        20,480  blk.64.nextn.hnorm.weight
+        20,480  blk.64.nextn.shared_head_norm.weight
+count=15 bytes=849,451,008 (0.849 GB / 810.1 MiB)
+load lines:
+0.00.227.718 I srv    load_model: loading model '/models/Qwen3.8-27B-huihui-NVFP4.gguf'
+0.12.731.425 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+0.12.733.983 I srv  llama_server: model loaded
+
+=== live load: tiel ===
+container: running healthy=healthy
+vram_after_load_mib: 23401 MiB, 24463 MiB, 583 MiB
+unused tensors:
+  (none)
+unused byte sum:
+count=0 bytes=0 (0.000 GB / 0.0 MiB)
+load lines:
+0.00.143.767 I srv    load_model: loading model '/models/Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf'
+0.14.405.013 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+0.14.416.293 I srv  llama_server: model loaded
+
+=== restored superqwen ===
+vram: 22758 MiB, 24463 MiB, 1227 MiB
+done.
+
+=== live unused tensors (MTP off) ===
+
+llama-server without --spec-type ignores the whole extra MTP block, not only nextn.*.
+Unused byte sums match the GGUF tensor offsets exactly.
+
+| overlay          | unused tensors | unused bytes     | source |
+|------------------|----------------|------------------|--------|
+| qwen             | 15 × blk.64    | 225,712,128 B    | scripts/speed-results/qwen-20260916-031329.log (same image) |
+| qwen-uncensored  | 15 × blk.64    | 849,451,008 B    | live 2026-09-16T13:43 |
+| superqwen        | 0              | 0                | live (no nextn in this GGUF) |
+| cybertiel        | 20 × blk.40    | 389,400,576 B    | scripts/speed-results/cybertiel-20260916-031030.log (same image) |
+| tiel             | 0              | 0                | live 2026-09-16T13:43 |
+| genesis          | 0              | 0                | compare.sh 2026-09-16 14:15 (no nextn in this GGUF) |
+
+SuperQwen's MTP draft is a *separate* file we do not download:
+  mtp-SuperQwen3.8-27b-abliterated-Q4_0.gguf  1,680,272,000 B (1.680 GB / 1.565 GiB)
+  HF: Jiunsong/SuperQwen3.8-27b-abliterated-GGUF
+
+=== VRAM after load (MTP off, --fit-target 1024) ===
+
+Used ≈ 24 GB minus leftover. --fit fills remaining VRAM with the KVarN pool, so
+these numbers are *not* the weight size. Weight size is "body without MTP" above.
+
+| overlay          | used MiB | free MiB | note |
+|------------------|----------|----------|------|
+| qwen             | 23203    | 781      | after load, 2026-09-16 03:13 |
+| qwen-uncensored  | 23141    | 843      | after load, 2026-09-16 13:43 |
+| superqwen        | 22758    | 1227     | fresh restore, 2026-09-16 13:43 |
+| cybertiel        | 23403    | 581      | after load, 2026-09-16 03:10 |
+| tiel             | 23401    | 583      | after load, 2026-09-16 13:43 |
+| genesis          | 22123    | 1861     | after load, 2026-09-16 14:15 |
+
+superqwen had been up 49 min before this inventory (23297 used / 687 free); that was
+warm KV, not a fresh load. Tiel and CyberTiel match to 2 MiB — same 22.360 GB body.
+
+=== summary ===
+
+| overlay          | NVFP4            | disk GB | MTP in file | MTP GB | loaded body GB |
+|------------------|------------------|---------|-------------|--------|----------------|
+| qwen             | yes              | 17.571  | yes IQ4_XS  | 0.226  | 17.345         |
+| qwen-uncensored  | yes              | 19.654  | yes BF16    | 0.849  | 18.804         |
+| superqwen        | no (Q4_K_M)      | 16.547  | no          | 0      | 16.547         |
+| cybertiel        | no (UD-Q4_K_XL)  | 22.750  | yes Q3_K    | 0.389  | 22.360         |
+| tiel             | no (UD-Q4_K_XL)  | 22.360  | no          | 0      | 22.360         |
+| genesis          | yes              | 21.475  | no          | 0      | 21.475         |
+
+=== speed (./scripts/compare.sh, thinking xhigh, MTP off) ===
+
+Same image, RTX 5090 Laptop 24463 MiB, kvarn6, --fit-target 1024.
+
+| overlay          | decode t/s | prefill ~1.9k t/s | VRAM load used/free | source |
+|------------------|------------|-------------------|---------------------|--------|
+| qwen             | 36.22      | 1646.4            | 23203 / 781         | summary-qwen-20260916-031329.txt |
+| qwen-uncensored  | 35.64      | 1594.6            | 23141 / 843         | summary-20260916-135246.txt |
+| superqwen        | 34.84      | 1111.0            | 22691 / 1293        | summary-20260916-135246.txt |
+| cybertiel        | 136.76     | 2527.5            | 23403 / 581         | summary-cybertiel-20260916-031030.txt |
+| tiel             | 140.80     | 2529.5            | 23403 / 582         | summary-20260916-135246.txt |
+| genesis          | 156.95     | 3206.0            | 22123 / 1861        | summary-20260916-141519.txt |
+
+Protocol: warmup + 2× decode (short prompt, max_tokens=128) + 1× long-prefill
+(~1.9k-token summarize, max_tokens=64). /v1/chat/completions, server default xhigh.
+
+## genesis
+file: Tiel-Coder-35B-A3B-Genesis-Hermes-NVFP4-v4.gguf
+name: Ornith-1.5-35B (GGUF metadata; Genesis Hermes NVFP4 v4)
+arch: qwen35moe  block_count=40  nextn_predict_layers=0  tensors=733  gguf_v=3
+disk: 21,474,667,584 B  (21.475 GB / 20.000 GiB / 20479.8 MiB)
+types: NVFP4=226, F32=331, F16=175, Q6_K=1
+MTP in file: no
+MTP bytes: 0
+body without MTP: same as disk
+sha256: d912f94830094b44dcbe84e2c91c32c2be45a5273ba647327c9a22cb046c0829
+HF: jan1k/Tiel-Coder-35B-A3B-Genesis-Hermes-NVFP4-GGUF

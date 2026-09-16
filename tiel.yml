@@ -1,8 +1,8 @@
 # Tiel-Coder 35B-A3B UD-Q4_K_XL — overlay for docker-compose.yml
 #
-# Non-MTP GGUF: this file has no nextn / draft head. Same serving shape
-# as cybertiel.yml: 2 slots, --no-mmproj, kvarn6/kvarn6 +
-# 1024-token F16 tail. 22.4 GB weights on 24 GB — snug; --fit-target 1024.
+# Non-MTP GGUF: this file has no nextn / draft head (block_count=40).
+# Same serving shape as cybertiel.yml: 2 slots, --no-mmproj, kvarn6/kvarn6
+# + 1024-token F16 tail. 22.36 GB weights on 24 GB — snug; --fit-target 1024.
 #
 # Ornith-1.5 MoE ~3B active, Sharp chat template. Guardrailed sibling of
 # Cyber-Tiel.

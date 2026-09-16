@@ -1,8 +1,9 @@
 # Cyber-Tiel-Coder 35B-A3B UD-Q4_K_XL — overlay for docker-compose.yml
 #
-# MTP is OFF. The GGUF still contains the grafted draft head; without
-# --spec-type it is never loaded. 22.7 GB weights on 24 GB — tighter
-# than Ornith; --fit-target 1024 shrinks context to keep ~1 GB free.
+# MTP is OFF. The GGUF still contains grafted blk.40 (Q3_K, 371 MiB);
+# without --spec-type llama-server ignores that whole block. 22.75 GB on
+# disk / 22.36 GB loaded on 24 GB — tighter than HIGH; --fit-target 1024
+# shrinks context to keep ~1 GB free.
 #
 # Abliterated Ornith-1.5 MoE ~3B active. Same serving shape as tiel.yml:
 # 2 slots, --no-mmproj, kvarn6/kvarn6 + 1024-token F16 tail.

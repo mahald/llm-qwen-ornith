@@ -1,0 +1,17 @@
+tiel  | warn: LLAMA_ARG_HOST environment variable is set, but will be overwritten by command line argument --host
+tiel  | warn: LLAMA_ARG_REASONING environment variable is set, but will be overwritten by command line argument --reasoning
+tiel  | warn: LLAMA_ARG_REASONING_EFFORT environment variable is set, but will be overwritten by command line argument --reasoning-effort
+tiel  | warn: LLAMA_ARG_REASONING_PRESERVE environment variable is set, but will be overwritten by command line argument --reasoning-preserve
+tiel  | 0.00.202.750 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+tiel  | 0.00.203.595 W srv  llama_server: -----------------
+tiel  | 0.00.203.597 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+tiel  | 0.00.203.597 W srv  llama_server: this can be a security risk (cross-origin attacks)
+tiel  | 0.00.203.598 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+tiel  | 0.00.203.598 W srv  llama_server: -----------------
+tiel  | 0.00.205.277 I srv    load_model: loading model '/models/Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf'
+tiel  | 0.16.835.174 I cmn          init: llama threadpool init, n_threads = 4
+tiel  | 0.16.916.507 I srv    load_model: initializing, n_slots = 2, n_ctx_slot = 262144, kv_unified = 'true'
+tiel  | 0.16.924.173 I srv  llama_server: model loaded
+tiel  | 0.16.924.177 I srv  llama_server: listening on http://0.0.0.0:8080
+tiel  | 0.16.924.177 W srv  llama_server: NOTICE: server default port will be changed to :9931 in a future release
+tiel  | 0.16.924.177 W srv  llama_server:         ref: https://github.com/ggml-org/llama.cpp/pull/26508

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Sequential Qwen vs CyberTiel speed check. MTP off. Uses the same compose
-# overlays as ./llm qwen|cybertiel, on port 8080 (the live stack is stopped).
+# Speed check through the same /v1/chat/completions path omp/pi use.
+# MTP off. Uses the live compose overlays on port 8080 (the stack is stopped).
 #
-#   ./scripts/compare.sh
+#   ./scripts/compare.sh                         # all overlays
+#   ./scripts/compare.sh superqwen tiel genesis  # subset
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-IMAGE=beellama:native
 PORT=8080
 HEALTH_TIMEOUT=240
 WARMUP_MAX_TOKENS=16
@@ -26,6 +26,22 @@ print("Summarize the following notes in two sentences.\n\n" + body * 40)
 PY
 )"
 
+# overlay → compose file, API alias
+declare -A YML ALIAS
+YML[qwen]=qwen.yml
+ALIAS[qwen]=qwen3.8-27b
+YML[qwen-uncensored]=qwen-uncensored.yml
+ALIAS[qwen-uncensored]=qwen3.8-27b-uncensored
+YML[superqwen]=superqwen.yml
+ALIAS[superqwen]=superqwen3.8-27b
+YML[cybertiel]=cybertiel.yml
+ALIAS[cybertiel]=cyber-tiel-coder-35b
+YML[tiel]=tiel.yml
+ALIAS[tiel]=tiel-coder-35b
+YML[genesis]=genesis.yml
+ALIAS[genesis]=tiel-coder-35b-genesis
+ALL_MODELS=(qwen qwen-uncensored superqwen cybertiel tiel genesis)
+
 RESULTS_DIR="$ROOT/scripts/speed-results"
 mkdir -p "$RESULTS_DIR"
 STAMP="$(date +%Y%m%d-%H%M%S)"
@@ -36,10 +52,10 @@ log() { printf '%s\n' "$*" | tee -a "$SUMMARY"; }
 
 down_all() {
     local y
-    for y in qwen.yml qwen-uncensored.yml superqwen.yml cybertiel.yml tiel.yml; do
+    for y in qwen.yml qwen-uncensored.yml superqwen.yml cybertiel.yml tiel.yml genesis.yml; do
         docker compose -f docker-compose.yml -f "$y" down --remove-orphans --timeout 20 >/dev/null 2>&1 || true
     done
-    docker rm -f qwen qwen-uncensored superqwen ornith cybertiel tiel llm-compare >/dev/null 2>&1 || true
+    docker rm -f qwen qwen-uncensored superqwen ornith cybertiel tiel genesis llm-compare >/dev/null 2>&1 || true
 }
 
 gpu_mem() {
@@ -70,16 +86,20 @@ PY
 fmt_timings() {
     python3 -c '
 import json, sys
-t = (json.load(sys.stdin).get("timings") or {})
+data = json.load(sys.stdin)
+t = data.get("timings") or {}
+u = (data.get("usage") or {}).get("completion_tokens_details") or {}
 print(
     "prompt {pn} tok @ {pps:.1f} t/s, gen {gn} tok @ {gps:.1f} t/s "
-    "(prompt {pms:.0f} ms, gen {gms:.0f} ms)".format(
+    "(prompt {pms:.0f} ms, gen {gms:.0f} ms; reasoning={rt}, visible={vt})".format(
         pn=t.get("prompt_n") or 0,
         pps=t.get("prompt_per_second") or 0.0,
         gn=t.get("predicted_n") or 0,
         gps=t.get("predicted_per_second") or 0.0,
         pms=t.get("prompt_ms") or 0.0,
         gms=t.get("predicted_ms") or 0.0,
+        rt=u.get("reasoning_tokens", "?"),
+        vt=u.get("visible_tokens", "?"),
     )
 )
 '
@@ -103,7 +123,9 @@ print()
 }
 
 run_config() {
-    local label="$1" yml="$2" alias="$3"
+    local label="$1"
+    local yml="${YML[$label]}"
+    local alias="${ALIAS[$label]}"
 
     log ""
     log "=== ${label} ==="
@@ -118,7 +140,18 @@ run_config() {
     docker compose -f docker-compose.yml -f "$yml" logs >"$logf" 2>&1
 
     log "vram_after_load_mib (used,total,free): $(gpu_mem)"
-    grep -E 'KVarN|kvarn|common_fit|MoE cache fit|n_ctx_slot|n_slots|kv_size|KV cache|cache type|kv-tail' "$logf" | head -40 | tee -a "$SUMMARY" || true
+    grep -E 'unused tensor|KVarN|kvarn|common_fit|n_ctx_slot|n_slots|cache type|kv-tail' "$logf" \
+        | grep -v 'unused tensor' | head -20 | tee -a "$SUMMARY" || true
+    python3 - "$logf" >>"$SUMMARY" <<'PY' || true
+import re, sys
+s = n = 0
+for line in open(sys.argv[1], errors="replace"):
+    m = re.search(r"unused tensor (\S+) \(size = (\d+) bytes\)", line)
+    if m:
+        n += 1
+        s += int(m.group(2))
+print(f"unused_mtp_tensors: {n}  unused_mtp_bytes: {s} ({s/1024**2:.1f} MiB)")
+PY
 
     local tmp
     tmp=$(mktemp)
@@ -130,6 +163,7 @@ run_config() {
         return 1
     fi
     record_raw "$label" warmup 1 "$tmp"
+    log "  warmup: $(fmt_timings <"$tmp")"
 
     local i gen_sum=0 prefill_sum=0
     for i in $(seq 1 "$DECODE_REPEATS"); do
@@ -154,26 +188,36 @@ run_config() {
     record_raw "$label" prefill 1 "$tmp"
     log "  long-prefill: $(fmt_timings <"$tmp")"
     log "vram_after_requests_mib (used,total,free): $(gpu_mem)"
-
-    down_all
-    sleep 3
 }
 
+MODELS=()
+if [[ $# -eq 0 ]]; then
+    MODELS=("${ALL_MODELS[@]}")
+else
+    for m in "$@"; do
+        [[ -n "${YML[$m]:-}" ]] || { echo "unknown model: $m (want: ${ALL_MODELS[*]})" >&2; exit 1; }
+        MODELS+=("$m")
+    done
+fi
+
 : >"$SUMMARY"
-log "BeeLlama.cpp  Qwen3.8-27B NVFP4 HIGH vs Cyber-Tiel-Coder 35B-A3B  (no MTP, kvarn6/kvarn6)"
+log "BeeLlama.cpp  ${MODELS[*]}  (no MTP, kvarn6/kvarn6)"
 log "stamp: $STAMP"
 log "gpu: $(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader)"
-log "image: $IMAGE"
+log "image: $(docker image inspect beellama:native --format '{{.Id}} {{.Created}}')"
 log "decode prompt max_tokens=${DECODE_MAX_TOKENS} repeats=${DECODE_REPEATS}"
-log "MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024."
+log "MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024. GGML_SCHED_MAX_COPIES=1."
+log "thinking: server default (xhigh). Same /v1/chat/completions path as omp/pi."
 
-run_config qwen qwen.yml qwen3.8-27b || log "SKIP/FAIL qwen"
-run_config cybertiel cybertiel.yml cyber-tiel-coder-35b || log "SKIP/FAIL cybertiel"
+for m in "${MODELS[@]}"; do
+    run_config "$m" || log "SKIP/FAIL $m"
+done
 
+down_all
 log ""
 log "raw timings: $RAW_JSONL"
 log "summary: $SUMMARY"
 log "done."
 echo
 echo "Summary: $SUMMARY"
-echo "Stack is down. Start with ./llm qwen | qwen-uncensored | superqwen | cybertiel | tiel"
+echo "Stack is down. Start with ./llm qwen | qwen-uncensored | superqwen | cybertiel | tiel | genesis"
