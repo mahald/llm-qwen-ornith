@@ -2,23 +2,18 @@
 
 One native **BeeLlama.cpp** image, six models, one GPU, one port. Keep the folder small.
 
-Default path is BeeLlama. Two extra images exist only for engine comparison (`./llm build bun` / `./llm build main`); they do not replace `./llm qwen`.
-
 ## Layout
 
 | Path | Role |
 |---|---|
 | `docker-compose.yml` | Shared stack (image, `gpus: all`, port 8080, CUDA require) |
 | `qwen.yml` / `qwen-uncensored.yml` / `superqwen.yml` / `cybertiel.yml` / `tiel.yml` / `genesis.yml` | Model overlays: `container_name`, `command`, `x-download` |
-| `*-bun.yml` / `*-main.yml` | Comparison overlays (override `image`). bun = VBR, main = q5_1 KV |
-| `llm` | One helper: overlays / `stop` / `build` `[bee\|bun\|main]` / `download` |
+| `llm` | One helper: `qwen` / `qwen-uncensored` / `superqwen` / `cybertiel` / `tiel` / `genesis` / `stop` / `build` / `download` |
 | `Dockerfile` | Native CUDA 13.3.1 image `beellama:native` |
-| `Dockerfile.bun` | buun-llama-cpp master → `bun:native` |
-| `Dockerfile.main` | ggml-org/llama.cpp master → `llamacpp:native` |
 | `models/` | GGUFs |
-| `scripts/` | `compare.sh` (bee/bun/main, or a subset) and `speed-results/` |
+| `scripts/` | `compare.sh` (all six, or a subset) and `speed-results/` |
 
-Do not add `params.env`, `common.sh`, or extra start scripts. Measuring tools stay under `scripts/`. Default serving stays BeeLlama.
+Do not add extra Dockerfiles, `params.env`, `common.sh`, or extra start scripts. Measuring tools stay under `scripts/`.
 
 ## Start / switch
 
@@ -29,12 +24,8 @@ Do not add `params.env`, `common.sh`, or extra start scripts. Measuring tools st
 ./llm cybertiel
 ./llm tiel
 ./llm genesis
-./llm qwen-bun            # buun VBR, same GGUF
-./llm qwen-main           # llama.cpp master, q5_1 KV
 ./llm stop
-./llm build               # BeeLlama → beellama:native
-./llm build bun           # buun     → bun:native
-./llm build main          # llama.cpp → llamacpp:native
+./llm build
 ./llm download
 ```
 
@@ -107,7 +98,7 @@ Put flag and value on the same line inside the `>` block (`-m /models/...`, `--f
 ## Serving rules
 
 - **No MTP.** Do not pass `--spec-type`. Three GGUFs still contain the draft block; without `--spec-type` llama-server skips the whole extra layer (`blk.64` / `blk.40`), not only `nextn.*`. Measured unused: HIGH 215 MiB, Huihui 810 MiB, CyberTiel 371 MiB. SuperQwen, Tiel, and Genesis have no head in-file (sidecars not downloaded). Inventory: `scripts/speed-results/model-sizes-20260916.txt`.
-- **KV cache:** `-ctk kvarn6` / `-ctv kvarn6`, `--kv-tail-tokens 1024` (BeeLlama KVarN + F16 precision tail). Comparison overlays: bun uses `-ct vbr --vbr-vram auto --cache-ram 0` (no `--kv-tail-tokens`). main uses `-ctk q5_1 -ctv q5_1` — llama.cpp master has no `q6_0` cache type; `q5_1` is the closest ~6-bit option (allowed: f16, q8_0, q5_0, q5_1, q4_0, …). q8_0 at 262k×3 slots SIGKILL'd SuperQwen against the 12g cgroup.
+- **KV cache:** `-ctk kvarn6` / `-ctv kvarn6`, `--kv-tail-tokens 1024` (BeeLlama KVarN + F16 precision tail). Not VBR (`-ct vbr` is buun-only).
 - **VRAM:** `-ngl 99`, `--fit on`, `--fit-target 1024` (~1 GB free on the RTX 5090 Laptop). Intel iGPU owns the desktop, so almost all 24 GB NVIDIA VRAM is for inference. Do not pass `--n-cpu-moe`. Do not enable unified memory. `--fit` must not lower `-ngl` (it is pinned at 99); it only shrinks `-c`. 27B weights + KV stay on the GPU; GGUF mmap is file cache, not CPU offload. Leave mmap on (`--no-mmap` OOMs the 27Bs against the 12g cgroup).
 - **Thinking:** `--reasoning on`, `--reasoning-effort xhigh`, `--reasoning-preserve` (Qwen3.8 top effort; SuperQwen's baked template defaults to `medium` without the flag). Compose also sets `LLAMA_ARG_REASONING=on`, `LLAMA_ARG_REASONING_EFFORT=xhigh`, `LLAMA_ARG_REASONING_PRESERVE=1`. omp/pi default thinking is `xhigh` and must send `reasoning_effort` (not only `enable_thinking`).
-- Image: `beellama:native` ([Anbeeld/beellama.cpp](https://github.com/Anbeeld/beellama.cpp), CUDA **13.3.1** toolkit, `sm_120`, `GGML_NATIVE=ON`, `GGML_CUDA_KVARN=ON`, `GGML_CUDA_FA_ALL_QUANTS=ON`, `GGML_SCHED_MAX_COPIES=1`, `NVIDIA_REQUIRE_CUDA=cuda>=13.2`). Rebuild with `./llm build`. Comparison: `bun:native` from [spiritbuun/buun-llama-cpp](https://github.com/spiritbuun/buun-llama-cpp) (`Dockerfile.bun`, no KVarN). `llamacpp:native` from [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) (`Dockerfile.main`, no KVarN, no VBR).
+- Image: `beellama:native` ([Anbeeld/beellama.cpp](https://github.com/Anbeeld/beellama.cpp), CUDA **13.3.1** toolkit, `sm_120`, `GGML_NATIVE=ON`, `GGML_CUDA_KVARN=ON`, `GGML_CUDA_FA_ALL_QUANTS=ON`, `GGML_SCHED_MAX_COPIES=1`, `NVIDIA_REQUIRE_CUDA=cuda>=13.2`). Rebuild with `./llm build`.

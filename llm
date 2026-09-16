@@ -1,55 +1,22 @@
 #!/usr/bin/env bash
-# One helper: ./llm <overlay> | stop | build [bee|bun|main] | download
-# Default overlay files (qwen.yml, …) stay BeeLlama. *-bun.yml / *-main.yml
-# are comparison engines and override the image.
+# One helper: ./llm qwen | qwen-uncensored | superqwen | cybertiel | tiel | genesis | stop | build | download
 set -euo pipefail
 cd "$(dirname "$0")"
 
+IMAGE=beellama:native
 COMPOSE=(docker compose -f docker-compose.yml)
-BEE_MODELS=(qwen qwen-uncensored superqwen cybertiel tiel genesis)
 
 usage() {
-    echo "usage: $0 <overlay> | stop | build [bee|bun|main] | download" >&2
-    echo "  overlays: ${BEE_MODELS[*]}" >&2
-    echo "            <model>-bun   (buun-llama-cpp, VBR KV)   image bun:native" >&2
-    echo "            <model>-main  (llama.cpp master, q5_1)   image llamacpp:native" >&2
-    echo "  build:    ./llm build          # BeeLlama → beellama:native" >&2
-    echo "            ./llm build bun      # buun      → bun:native" >&2
-    echo "            ./llm build main     # llama.cpp → llamacpp:native" >&2
+    echo "usage: $0 qwen | qwen-uncensored | superqwen | cybertiel | tiel | genesis | stop | build | download" >&2
     exit 1
-}
-
-overlay_files() {
-    local f
-    for f in *.yml; do
-        [[ "$f" == docker-compose.yml ]] && continue
-        printf '%s\n' "$f"
-    done
-}
-
-overlay_names() {
-    local f
-    while IFS= read -r f; do
-        printf '%s\n' "${f%.yml}"
-    done < <(overlay_files)
-}
-
-container_names() {
-    local f name
-    while IFS= read -r f; do
-        name=$(awk '/^[[:space:]]*container_name:/{print $2; exit}' "$f")
-        [[ -n "$name" ]] && printf '%s\n' "$name"
-    done < <(overlay_files)
-    printf '%s\n' ornith llm-compare
 }
 
 down_all() {
     local y
-    while IFS= read -r y; do
+    for y in qwen.yml qwen-uncensored.yml superqwen.yml cybertiel.yml tiel.yml genesis.yml; do
         "${COMPOSE[@]}" -f "$y" down --remove-orphans --timeout 20 >/dev/null 2>&1 || true
-    done < <(overlay_files)
-    # shellcheck disable=SC2046
-    docker rm -f $(container_names) >/dev/null 2>&1 || true
+    done
+    docker rm -f qwen qwen-uncensored superqwen ornith cybertiel tiel genesis llm-compare >/dev/null 2>&1 || true
 }
 
 up_model() {
@@ -61,7 +28,7 @@ up_model() {
     nvidia-smi --query-gpu=name,memory.used,memory.total,memory.free --format=csv
 }
 
-host_arch() {
+do_build() {
     command -v nvidia-smi >/dev/null 2>&1 || {
         echo "nvidia-smi not found — NVIDIA driver required." >&2
         exit 1
@@ -70,45 +37,13 @@ host_arch() {
     arch=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader \
            | tr -d ' .' | sort -u | paste -sd';' -)
     [[ -n "$arch" ]] || { echo "Could not read compute capability." >&2; exit 1; }
-    printf '%s\n' "$arch"
-}
-
-do_build() {
-    local target="${1:-bee}"
-    local arch image file ref desc
-    arch=$(host_arch)
     echo "GPU compute capability: ${arch}"
-    case "$target" in
-        bee|"")
-            image=beellama:native
-            file=Dockerfile
-            ref=main
-            desc="BeeLlama main"
-            ;;
-        bun)
-            image=bun:native
-            file=Dockerfile.bun
-            ref=master
-            desc="buun-llama-cpp master"
-            ;;
-        main)
-            image=llamacpp:native
-            file=Dockerfile.main
-            ref=master
-            desc="ggml-org/llama.cpp master"
-            ;;
-        *)
-            echo "unknown build target: $target (want: bee | bun | main)" >&2
-            exit 1
-            ;;
-    esac
-    echo "Building ${image} from ${file} (CPU: -march=native, CUDA: sm_${arch//;/, sm_}, toolkit 13.3.1, ${desc})"
+    echo "Building ${IMAGE} (CPU: -march=native, CUDA: sm_${arch//;/, sm_}, toolkit 13.3.1, BeeLlama main)"
     docker build \
-        -f "$file" \
         --build-arg CUDA_DOCKER_ARCH="${arch}" \
         --build-arg GGML_NATIVE=ON \
-        --build-arg LLAMACPP_REF="$ref" \
-        -t "$image" \
+        --build-arg LLAMACPP_REF=main \
+        -t "$IMAGE" \
         .
 }
 
@@ -182,30 +117,31 @@ PY
 
 do_download() {
     mkdir -p models
-    local m
-    for m in "${BEE_MODELS[@]}"; do
-        check_one "${m}.yml"
-    done
+    check_one qwen.yml
+    check_one qwen-uncensored.yml
+    check_one superqwen.yml
+    check_one cybertiel.yml
+    check_one tiel.yml
+    check_one genesis.yml
     echo
     echo "Done. models/ is ready."
 }
 
 cmd="${1:-}"
 case "$cmd" in
+    qwen)              up_model qwen.yml ;;
+    qwen-uncensored)   up_model qwen-uncensored.yml ;;
+    superqwen)         up_model superqwen.yml ;;
+    cybertiel)         up_model cybertiel.yml ;;
+    tiel)              up_model tiel.yml ;;
+    genesis)           up_model genesis.yml ;;
     stop)
         down_all
         echo "Stopped."
         docker compose ls
         nvidia-smi --query-gpu=name,memory.used,memory.total,memory.free --format=csv
         ;;
-    build)    do_build "${2:-bee}" ;;
+    build)    do_build ;;
     download) do_download ;;
-    ""|-h|--help) usage ;;
-    *)
-        if [[ -f "${cmd}.yml" ]]; then
-            up_model "${cmd}.yml"
-        else
-            usage
-        fi
-        ;;
+    *)        usage ;;
 esac
