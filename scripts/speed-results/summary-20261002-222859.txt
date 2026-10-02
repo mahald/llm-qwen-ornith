@@ -1,0 +1,56 @@
+BeeLlama.cpp  twinturbo qwen qwen-uncensored  (no MTP, kvarn6/kvarn6)
+stamp: 20261002-222859
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+image: sha256:787c60e9e2d3908ff9e3e28e78bea60fd955e020b6a123a8681a10325df7b539 2026-10-02T22:16:55.707124939+02:00
+decode prompt max_tokens=128 repeats=2
+MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024. GGML_SCHED_MAX_COPIES=1.
+thinking: server default (xhigh). Same /v1/chat/completions path as omp/pi.
+
+=== twinturbo ===
+overlay: twinturbo.yml
+alias: qwen3.8-27b-twin-turbo
+vram_after_load_mib (used,total,free): 23149, 24463, 835
+twinturbo  | 0.01.052.807 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+twinturbo  | 0.12.142.816 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 15  unused_mtp_bytes: 225712128 (215.3 MiB)
+  warmup: prompt 54 tok @ 232.4 t/s, gen 16 tok @ 34.4 t/s (prompt 232 ms, gen 436 ms; reasoning=16, visible=0)
+  decode[1]: prompt 71 tok @ 785.2 t/s, gen 128 tok @ 35.8 t/s (prompt 90 ms, gen 3549 ms; reasoning=40, visible=88)
+  decode[2]: prompt 71 tok @ 861.9 t/s, gen 119 tok @ 35.3 t/s (prompt 82 ms, gen 3342 ms; reasoning=84, visible=35)
+  decode_avg_gen_t/s: 35.55
+  decode_avg_prefill_t/s: 823.56
+  long-prefill: prompt 1902 tok @ 1733.6 t/s, gen 64 tok @ 34.3 t/s (prompt 1097 ms, gen 1837 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 23545, 24463, 440
+
+=== qwen ===
+overlay: qwen.yml
+alias: qwen3.8-27b
+vram_after_load_mib (used,total,free): 23149, 24463, 835
+qwen  | 0.00.974.134 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+qwen  | 0.13.520.148 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 15  unused_mtp_bytes: 225712128 (215.3 MiB)
+  warmup: prompt 54 tok @ 244.0 t/s, gen 16 tok @ 35.8 t/s (prompt 221 ms, gen 418 ms; reasoning=16, visible=0)
+  decode[1]: prompt 71 tok @ 805.0 t/s, gen 128 tok @ 36.3 t/s (prompt 88 ms, gen 3497 ms; reasoning=94, visible=34)
+  decode[2]: prompt 71 tok @ 873.8 t/s, gen 124 tok @ 36.0 t/s (prompt 81 ms, gen 3417 ms; reasoning=89, visible=35)
+  decode_avg_gen_t/s: 36.16
+  decode_avg_prefill_t/s: 839.39
+  long-prefill: prompt 1902 tok @ 1748.3 t/s, gen 64 tok @ 34.6 t/s (prompt 1088 ms, gen 1819 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 23545, 24463, 439
+
+=== qwen-uncensored ===
+overlay: qwen-uncensored.yml
+alias: qwen3.8-27b-uncensored
+vram_after_load_mib (used,total,free): 23149, 24463, 835
+qwen-uncensored  | 0.00.996.248 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+qwen-uncensored  | 0.13.416.028 I srv    load_model: initializing, n_slots = 3, n_ctx_slot = 262144, kv_unified = 'true'
+unused_mtp_tensors: 15  unused_mtp_bytes: 849451008 (810.1 MiB)
+  warmup: prompt 54 tok @ 430.7 t/s, gen 16 tok @ 35.8 t/s (prompt 125 ms, gen 419 ms; reasoning=16, visible=0)
+  decode[1]: prompt 71 tok @ 849.5 t/s, gen 126 tok @ 35.7 t/s (prompt 84 ms, gen 3505 ms; reasoning=92, visible=34)
+  decode[2]: prompt 71 tok @ 840.7 t/s, gen 123 tok @ 35.6 t/s (prompt 84 ms, gen 3423 ms; reasoning=89, visible=34)
+  decode_avg_gen_t/s: 35.65
+  decode_avg_prefill_t/s: 845.08
+  long-prefill: prompt 1902 tok @ 1723.8 t/s, gen 64 tok @ 34.5 t/s (prompt 1103 ms, gen 1827 ms; reasoning=64, visible=0)
+vram_after_requests_mib (used,total,free): 23319, 24463, 665
+
+raw timings: /home/marcel/LLM/scripts/speed-results/raw-20261002-222859.jsonl
+summary: /home/marcel/LLM/scripts/speed-results/summary-20261002-222859.txt
+done.

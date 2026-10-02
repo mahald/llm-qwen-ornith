@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One helper: ./llm qwen | qwen-uncensored | superqwen | cybertiel | tiel | genesis | stop | build | download
+# One helper: ./llm qwen | qwen-uncensored | superqwen | twinturbo | cybertiel | tiel | genesis | stop | build | download
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -7,16 +7,16 @@ IMAGE=beellama:native
 COMPOSE=(docker compose -f docker-compose.yml)
 
 usage() {
-    echo "usage: $0 qwen | qwen-uncensored | superqwen | cybertiel | tiel | genesis | stop | build | download" >&2
+    echo "usage: $0 qwen | qwen-uncensored | superqwen | twinturbo | cybertiel | tiel | genesis | stop | build | download" >&2
     exit 1
 }
 
 down_all() {
     local y
-    for y in qwen.yml qwen-uncensored.yml superqwen.yml cybertiel.yml tiel.yml genesis.yml; do
+    for y in qwen.yml qwen-uncensored.yml superqwen.yml twinturbo.yml cybertiel.yml tiel.yml genesis.yml; do
         "${COMPOSE[@]}" -f "$y" down --remove-orphans --timeout 20 >/dev/null 2>&1 || true
     done
-    docker rm -f qwen qwen-uncensored superqwen ornith cybertiel tiel genesis llm-compare >/dev/null 2>&1 || true
+    docker rm -f qwen qwen-uncensored superqwen twinturbo ornith cybertiel tiel genesis llm-compare >/dev/null 2>&1 || true
 }
 
 up_model() {
@@ -38,11 +38,15 @@ do_build() {
            | tr -d ' .' | sort -u | paste -sd';' -)
     [[ -n "$arch" ]] || { echo "Could not read compute capability." >&2; exit 1; }
     echo "GPU compute capability: ${arch}"
-    echo "Building ${IMAGE} (CPU: -march=native, CUDA: sm_${arch//;/, sm_}, toolkit 13.3.1, BeeLlama main)"
+    # Resolve main to a commit so a new upstream commit busts the Docker layer cache.
+    local ref
+    ref=$(git ls-remote https://github.com/Anbeeld/beellama.cpp refs/heads/main | cut -f1)
+    [[ -n "$ref" ]] || { echo "Could not resolve BeeLlama main." >&2; exit 1; }
+    echo "Building ${IMAGE} (CPU: -march=native, CUDA: sm_${arch//;/, sm_}, toolkit 13.3.1, BeeLlama main ${ref:0:9})"
     docker build \
         --build-arg CUDA_DOCKER_ARCH="${arch}" \
         --build-arg GGML_NATIVE=ON \
-        --build-arg LLAMACPP_REF=main \
+        --build-arg LLAMACPP_REF="${ref}" \
         -t "$IMAGE" \
         .
 }
@@ -120,6 +124,7 @@ do_download() {
     check_one qwen.yml
     check_one qwen-uncensored.yml
     check_one superqwen.yml
+    check_one twinturbo.yml
     check_one cybertiel.yml
     check_one tiel.yml
     check_one genesis.yml
@@ -132,6 +137,7 @@ case "$cmd" in
     qwen)              up_model qwen.yml ;;
     qwen-uncensored)   up_model qwen-uncensored.yml ;;
     superqwen)         up_model superqwen.yml ;;
+    twinturbo)         up_model twinturbo.yml ;;
     cybertiel)         up_model cybertiel.yml ;;
     tiel)              up_model tiel.yml ;;
     genesis)           up_model genesis.yml ;;
