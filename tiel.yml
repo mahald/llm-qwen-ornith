@@ -17,7 +17,7 @@ services:
     container_name: tiel
     command: >
       -m /models/Tiel-Coder-35B-A3B-UD-Q4_K_XL.gguf
-      -a tiel-coder-35b
+      -a tiel-coder-35b,local-qwen
       --host 0.0.0.0
       --port 8080
       -ngl 99

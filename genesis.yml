@@ -17,7 +17,7 @@ services:
     container_name: genesis
     command: >
       -m /models/Tiel-Coder-35B-A3B-Genesis-Hermes-NVFP4-v4.gguf
-      -a tiel-coder-35b-genesis
+      -a tiel-coder-35b-genesis,local-qwen
       --host 0.0.0.0
       --port 8080
       -ngl 99

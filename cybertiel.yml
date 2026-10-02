@@ -18,7 +18,7 @@ services:
     container_name: cybertiel
     command: >
       -m /models/Cyber-Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf
-      -a cyber-tiel-coder-35b
+      -a cyber-tiel-coder-35b,local-qwen
       --host 0.0.0.0
       --port 8080
       -ngl 99

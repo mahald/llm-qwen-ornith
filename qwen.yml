@@ -18,7 +18,7 @@ services:
     container_name: qwen
     command: >
       -m /models/Qwen3.8-27B-NVFP4-MTP-HIGH.gguf
-      -a qwen3.8-27b
+      -a qwen3.8-27b,local-qwen
       --host 0.0.0.0
       --port 8080
       -ngl 99

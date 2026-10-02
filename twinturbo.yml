@@ -16,7 +16,7 @@ services:
     container_name: twinturbo
     command: >
       -m /models/Qwen3.8-27B-TWIN-TURBO-Fable-Cold-Fusion-709-L-Uncensored-NVFP4-HIGH.gguf
-      -a qwen3.8-27b-twin-turbo
+      -a qwen3.8-27b-twin-turbo,local-qwen
       --host 0.0.0.0
       --port 8080
       -ngl 99

@@ -16,7 +16,7 @@ services:
     container_name: qwen-uncensored
     command: >
       -m /models/Qwen3.8-27B-huihui-NVFP4.gguf
-      -a qwen3.8-27b-uncensored
+      -a qwen3.8-27b-uncensored,local-qwen
       --host 0.0.0.0
       --port 8080
       -ngl 99

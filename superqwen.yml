@@ -16,7 +16,7 @@ services:
     container_name: superqwen
     command: >
       -m /models/SuperQwen3.8-27b-abliterated-Q4_K_M.gguf
-      -a superqwen3.8-27b
+      -a superqwen3.8-27b,local-qwen
       --host 0.0.0.0
       --port 8080
       -ngl 99
