@@ -109,7 +109,7 @@ Set sampling in omp to `-1` so the YAML defaults apply. Default thinking is **xh
 
 ## Speed
 
-RTX 5090 Laptop (24463 MiB), BeeLlama.cpp `beellama:native`, **2026-09-16**. TWIN-TURBO, HIGH and Uncensored re-measured **2026-10-02** on BeeLlama 0.4.7 (`58a1629`). Profile (all seven): MTP off, `-ngl 99`, `kvarn6`/`kvarn6`, `--kv-tail-tokens 1024`, `--flash-attn on`, `--fit-target 1024`, thinking **xhigh**. 27B dense uses 3 slots, 35B-A3B uses 2; native `-c 262144`.
+RTX 5090 Laptop (24463 MiB), BeeLlama.cpp `beellama:native`, **2026-09-16**. TWIN-TURBO, HIGH and Uncensored re-measured **2026-10-02** on BeeLlama 0.4.7 (`58a1629`). Profile (all seven): MTP off, `-ngl 99`, `kvarn6`/`kvarn6`, `--kv-tail-tokens 1024`, `--flash-attn on`, `--fit-target 1024`, thinking **xhigh**. All overlays now run `-np 1` (one agent, one slot); the numbers below were measured earlier with 3 slots (27B dense) / 2 slots (35B-A3B). Native `-c 262144`.
 
 The image ships `llama-server` only — no `llama-bench`. The standard tool is [`./scripts/compare.sh`](scripts/compare.sh): same `/v1/chat/completions` path omp/pi use. `./scripts/compare.sh` runs all seven; `./scripts/compare.sh superqwen tiel genesis` a subset.
 
@@ -119,7 +119,7 @@ The image ships `llama-server` only — no `llama-bench`. The standard tool is [
 | Decode | **36.2 t/s** | **35.7 t/s** | **34.8 t/s** | **35.6 t/s** | **137 t/s** | **141 t/s** | **157 t/s** |
 | Prefill ~1.9k | 1748 t/s | 1724 t/s | 1111 t/s | 1734 t/s | 2528 t/s | 2530 t/s | 3206 t/s |
 | VRAM after load | 23149 / 835 free | 23149 / 835 | 22691 / 1293 | 23149 / 835 | 23403 / 581 | 23403 / 582 | 22123 / 1861 |
-| Slots | 3 | 3 | 3 | 3 | 2 | 2 | 2 |
+| Slots (as measured) | 3 | 3 | 3 | 3 | 2 | 2 | 2 |
 
 Decode is generation t/s on a short prompt (mean of 2, `max_tokens=128`). Prefill is a ~1.9k-token summarize prompt. `--fit-target 1024` fills leftover VRAM with the KVarN pool, so used-MiB is **not** the weight size — that is the Loaded column above.
 

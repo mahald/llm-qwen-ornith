@@ -22,7 +22,7 @@ services:
       --host 0.0.0.0
       --port 8080
       -ngl 99
-      -np 2
+      -np 1
       -c 262144
       -ctk kvarn6
       -ctv kvarn6

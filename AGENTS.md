@@ -52,7 +52,7 @@ services:
       --host 0.0.0.0
       --port 8080
       -ngl 99
-      -np 3
+      -np 1
       -c 262144
       -ctk kvarn6
       -ctv kvarn6
@@ -94,11 +94,12 @@ command:
 
 Put flag and value on the same line inside the `>` block (`-m /models/...`, `--fit-target 1024`). One flag per line. No quotes unless a value has spaces.
 
-`qwen-uncensored.yml` is the Huihui abliterated NVFP4 sibling (`container_name: qwen-uncensored`, alias `qwen3.8-27b-uncensored`). `superqwen.yml` is SuperQwen3.8-27B abliterated Q4_K_M (`container_name: superqwen`, alias `superqwen3.8-27b`); its MTP draft is a separate GGUF we do not download. `twinturbo.yml` is DavidAU's Qwen3.8-27B TWIN-TURBO Fable Cold Fusion 709-L Uncensored in the esatapedico NVFP4 HIGH tier (`container_name: twinturbo`, alias `qwen3.8-27b-twin-turbo`, `-np 3`); MTP head in-file, unused. `cybertiel.yml` is the Huihui-abliterated Ornith-1.5 coder (`container_name: cybertiel`, `-np 2`, alias `cyber-tiel-coder-35b`, UD-Q4_K_XL); MTP stays off. `tiel.yml` is the guardrailed Sharp-template sibling (`container_name: tiel`, `-np 2`, alias `tiel-coder-35b`, UD-Q4_K_XL); that GGUF has no MTP head. `genesis.yml` is Tiel-Coder Genesis Hermes NVFP4 v4 (`container_name: genesis`, `-np 2`, alias `tiel-coder-35b-genesis`); no MTP in the file (MTP sibling not downloaded).
+`qwen-uncensored.yml` is the Huihui abliterated NVFP4 sibling (`container_name: qwen-uncensored`, alias `qwen3.8-27b-uncensored`). `superqwen.yml` is SuperQwen3.8-27B abliterated Q4_K_M (`container_name: superqwen`, alias `superqwen3.8-27b`); its MTP draft is a separate GGUF we do not download. `twinturbo.yml` is DavidAU's Qwen3.8-27B TWIN-TURBO Fable Cold Fusion 709-L Uncensored in the esatapedico NVFP4 HIGH tier (`container_name: twinturbo`, alias `qwen3.8-27b-twin-turbo`, `-np 1`); MTP head in-file, unused. `cybertiel.yml` is the Huihui-abliterated Ornith-1.5 coder (`container_name: cybertiel`, `-np 1`, alias `cyber-tiel-coder-35b`, UD-Q4_K_XL); MTP stays off. `tiel.yml` is the guardrailed Sharp-template sibling (`container_name: tiel`, `-np 1`, alias `tiel-coder-35b`, UD-Q4_K_XL); that GGUF has no MTP head. `genesis.yml` is Tiel-Coder Genesis Hermes NVFP4 v4 (`container_name: genesis`, `-np 1`, alias `tiel-coder-35b-genesis`); no MTP in the file (MTP sibling not downloaded).
 
 ## Serving rules
 
 - **No MTP.** Do not pass `--spec-type`. Four GGUFs still contain the draft block; without `--spec-type` llama-server skips the whole extra layer (`blk.64` / `blk.40`), not only `nextn.*`. Measured unused: HIGH 215 MiB, TWIN-TURBO 215 MiB, Huihui 810 MiB, CyberTiel 371 MiB. SuperQwen, Tiel, and Genesis have no head in-file (sidecars not downloaded). Inventory: `scripts/speed-results/model-sizes-20260916.txt`.
+- **One slot.** Every overlay runs `-np 1` (a single omp/pi agent). `-c 262144` is the whole window for that one slot; `--kv-unified` stays in place. Do not raise `-np` without a concurrent client.
 - **Shared alias:** every overlay uses `-a <model-alias>,local-qwen`. omp (`~/.omp/agent/models.yml`) and pi (`~/.pi/agent/models.json`) define one model `local/local-qwen` that hits whichever container is up on :8080. Keep `local-qwen` on any new overlay.
 - **KV cache:** `-ctk kvarn6` / `-ctv kvarn6`, `--kv-tail-tokens 1024` (BeeLlama KVarN + F16 precision tail). Not VBR (`-ct vbr` is buun-only).
 - **VRAM:** `-ngl 99`, `--fit on`, `--fit-target 1024` (~1 GB free on the RTX 5090 Laptop). Intel iGPU owns the desktop, so almost all 24 GB NVIDIA VRAM is for inference. Do not pass `--n-cpu-moe`. Do not enable unified memory. `--fit` must not lower `-ngl` (it is pinned at 99); it only shrinks `-c`. 27B weights + KV stay on the GPU; GGUF mmap is file cache, not CPU offload. Leave mmap on (`--no-mmap` OOMs the 27Bs against the 12g cgroup).
