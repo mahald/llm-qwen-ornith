@@ -45,7 +45,7 @@ Both think. The answer is in `message.content`, reasoning in `message.reasoning_
 | | |
 |---|---|
 | `docker-compose.yml` | Image, GPU (`--gpus all`), port 8080, `NVIDIA_REQUIRE_CUDA` |
-| `qwen.yml` / `qwen-uncensored.yml` / `cybertiel.yml` | Model, slots, sampling, KVarN — **tune here** |
+| `qwen.yml` / `qwen-uncensored.yml` / `cybertiel.yml` | Model, context, sampling, KVarN — **tune here** |
 | `llm` | `qwen` / `qwen-uncensored` / `cybertiel` / `stop` / `build` / `download` |
 | `Dockerfile` | Native BeeLlama build, CUDA **13.3.1** |
 | `models/` | The GGUFs (not in git — `./llm download`) |
@@ -84,22 +84,32 @@ llama.cpp still **mmaps** the GGUF (default). That is file-backed page cache of 
 
 Qwen3.8 only caches 16 of 64 layers (Gated Attention); the other 48 Gated DeltaNet layers keep a constant-size recurrent state. Native context is 262,144 tokens. `--fit on` shrinks `-c` if the KVarN pool plus graph scratch would miss `--fit-target`.
 
-## omp / pi
+## pi
+
+[pi](https://github.com/earendil-works/pi) is the only client: one agent, no subagents, no parallel requests. One slot (`-np 1`) is therefore enough and the whole 262,144-token window belongs to it.
 
 ```bash
-omp --model qwen-local/qwen3.8-27b
-omp --model qwen-local/qwen3.8-27b-uncensored
-omp --model cybertiel-local/cyber-tiel-coder-35b
-omp --model coco-frac/gpt-6-astra
+pi                          # defaults to local/local-qwen
+pi --model local/local-qwen
 ```
 
-Set sampling in omp to `-1` so the YAML defaults apply. Default thinking is **xhigh** (`--reasoning-effort xhigh` on the server; `defaultThinkingLevel: xhigh` in omp and pi). Qwen3.8 only accepts `low` / `medium` / `xhigh` — not `high`. Astra (LiteLLM on `10.1.0.5`) accepts `low` / `medium` / `high` / `xhigh` / `max`; in pi, `/effort` from `pi-effort` follows that map (`min` → `low`, `max` → `max`).
+`~/.pi/agent/models.json` defines one provider `local` (`http://127.0.0.1:8080/v1`, no key) with one model `local-qwen`. Every overlay serves that alias (`-a <name>,local-qwen`), so whichever container is up on :8080 answers — switch with `./llm qwen` / `qwen-uncensored` / `cybertiel` and pi needs no change.
+
+| pi setting | Value | Meaning |
+|---|---|---|
+| `contextWindow` (models.json) | 262144 | Same as `-c 262144` (`n_ctx_slot`) |
+| `maxTokens` (models.json) | 49152 | Cap per reply |
+| `compaction.modelOverrides["local/local-qwen"].reserveTokens` (settings.json) | 12144 | Auto-compaction above 262144 − 12144 = **250000** tokens |
+
+Keep `contextWindow` and `reserveTokens` in step with `-c`: if `--fit` ever shrinks the window, the server log shows the real `n_ctx_slot`.
+
+Default thinking is **xhigh** (`--reasoning-effort xhigh` on the server). pi sends `reasoning_effort` and `enable_thinking` / `preserve_thinking` as chat-template kwargs; its `thinkingLevelMap` turns `high` / `xhigh` / `max` into `xhigh`. Qwen3.8 only accepts `low` / `medium` / `xhigh` — not `high`. pi sends no sampling parameters, so the overlay's `--temp` / `--top-p` / `--top-k` defaults apply.
 
 ## Speed
 
-RTX 5090 Laptop (24463 MiB), BeeLlama.cpp `beellama:native`, **2026-09-16**. HIGH and Uncensored re-measured **2026-10-02** on BeeLlama 0.4.7 (`58a1629`). Profile (all three): MTP off, `-ngl 99`, `kvarn6`/`kvarn6`, `--kv-tail-tokens 1024`, `--flash-attn on`, `--fit-target 1024`, thinking **xhigh**. All overlays now run `-np 1` (one agent, one slot); the numbers below were measured earlier with 3 slots (27B dense) / 2 slots (35B-A3B). Native `-c 262144`.
+RTX 5090 Laptop (24463 MiB), BeeLlama.cpp `beellama:native`, **2026-09-16**. HIGH and Uncensored re-measured **2026-10-02** on BeeLlama 0.4.7 (`58a1629`). Profile (all three): MTP off, `-ngl 99`, `kvarn6`/`kvarn6`, `--kv-tail-tokens 1024`, `--flash-attn on`, `--fit-target 1024`, thinking **xhigh**. All overlays run `-np 1` (one pi agent, no parallelism, one slot); the numbers below were measured earlier with 3 slots (27B dense) / 2 slots (35B-A3B). Native `-c 262144`.
 
-The image ships `llama-server` only — no `llama-bench`. The standard tool is [`./scripts/compare.sh`](scripts/compare.sh): same `/v1/chat/completions` path omp/pi use. `./scripts/compare.sh` runs all three; `./scripts/compare.sh qwen cybertiel` a subset. The older logs in `scripts/speed-results/` still hold runs of models that are no longer in the stack.
+The image ships `llama-server` only — no `llama-bench`. The standard tool is [`./scripts/compare.sh`](scripts/compare.sh): same `/v1/chat/completions` path pi uses. `./scripts/compare.sh` runs all three; `./scripts/compare.sh qwen cybertiel` a subset. The older logs in `scripts/speed-results/` still hold runs of models that are no longer in the stack.
 
 | | Qwen HIGH | Uncensored | CyberTiel |
 |---|---|---|---|
@@ -127,4 +137,3 @@ docker run --rm --gpus all -e NVIDIA_REQUIRE_CUDA="cuda>=13.2" --entrypoint nvid
 - https://huggingface.co/esatapedico/Qwen3.8-27B-NVFP4-MTP-GGUF
 - https://huggingface.co/renketong/Huihui-Qwen3.8-27B-abliterated-NVFP4-GGUF
 - https://huggingface.co/peculiar-ragdoll/Cyber-Tiel-Coder-35B-A3B-GGUF-MTP
-- https://omp.sh

@@ -6,7 +6,7 @@
 #
 # Dense 27B, 17.57 GB on disk / 17.35 GB loaded. kvarn6/kvarn6 + 1024-token
 # F16 tail. Fit keeps ~1 GB free (--fit-target 1024) on the RTX 5090 Laptop.
-# 3 slots.
+# 1 slot (-np 1): a single pi agent, no parallel requests.
 
 x-download:
   repo: esatapedico/Qwen3.8-27B-NVFP4-MTP-GGUF

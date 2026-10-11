@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Speed check through the same /v1/chat/completions path omp/pi use.
+# Speed check through the same /v1/chat/completions path pi uses.
 # MTP off. Uses the live compose overlays on port 8080 (the stack is stopped).
 #
 #   ./scripts/compare.sh                         # all overlays
@@ -201,7 +201,7 @@ log "gpu: $(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader)"
 log "image: $(docker image inspect beellama:native --format '{{.Id}} {{.Created}}')"
 log "decode prompt max_tokens=${DECODE_MAX_TOKENS} repeats=${DECODE_REPEATS}"
 log "MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024. GGML_SCHED_MAX_COPIES=1."
-log "thinking: server default (xhigh). Same /v1/chat/completions path as omp/pi."
+log "thinking: server default (xhigh). Same /v1/chat/completions path as pi."
 
 for m in "${MODELS[@]}"; do
     run_config "$m" || log "SKIP/FAIL $m"
