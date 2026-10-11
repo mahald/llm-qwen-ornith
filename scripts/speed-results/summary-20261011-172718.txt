@@ -1,0 +1,68 @@
+llama.cpp  qwen qwen-uncensored cybertiel saluki  (no MTP, q8_0/q8_0)
+stamp: 20261011-172718
+gpu: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB
+image: sha256:a6f4e891d13cb6b76c8cdee2d62c0538a6d0741c0bba9bd45d39eb77c05e68cc 2026-10-11T17:26:54.875376274+02:00
+decode prompt max_tokens=128 repeats=2
+MTP: off. -c 184320 -ctk/v q8_0 --fit-target 1024. GGML_SCHED_MAX_COPIES=1.
+thinking: server default (xhigh). Same /v1/chat/completions path as pi.
+
+=== qwen ===
+overlay: qwen.yml
+alias: qwen3.8-27b
+vram_after_load_mib (used,total,free): 22268, 24463, 1717
+qwen  | 0.00.518.209 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+qwen  | 0.13.769.193 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 184320, kv_unified = 'true'
+unused_mtp_tensors: 15  unused_mtp_bytes: 225712128 (215.3 MiB)
+  warmup: prompt 54 tok @ 162.0 t/s, gen 16 tok @ 37.6 t/s (prompt 333 ms, gen 399 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 130.5 t/s, gen 86 tok @ 37.5 t/s (prompt 222 ms, gen 2268 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 33.8 t/s, gen 80 tok @ 37.9 t/s (prompt 118 ms, gen 2084 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 37.69
+  decode_avg_prefill_t/s: 82.14
+  long-prefill: prompt 1860 tok @ 2438.3 t/s, gen 64 tok @ 37.4 t/s (prompt 763 ms, gen 1683 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 22506, 24463, 1479
+
+=== qwen-uncensored ===
+overlay: qwen-uncensored.yml
+alias: qwen3.8-27b-uncensored
+vram_after_load_mib (used,total,free): 22268, 24463, 1717
+qwen-uncensored  | 0.11.913.978 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 184320, kv_unified = 'true'
+unused_mtp_tensors: 15  unused_mtp_bytes: 849451008 (810.1 MiB)
+  warmup: prompt 54 tok @ 189.7 t/s, gen 16 tok @ 36.9 t/s (prompt 285 ms, gen 406 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 127.4 t/s, gen 128 tok @ 37.3 t/s (prompt 228 ms, gen 3403 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 34.0 t/s, gen 128 tok @ 37.5 t/s (prompt 118 ms, gen 3391 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 37.39
+  decode_avg_prefill_t/s: 80.7
+  long-prefill: prompt 1860 tok @ 2369.0 t/s, gen 64 tok @ 37.1 t/s (prompt 785 ms, gen 1699 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 22408, 24463, 1577
+
+=== cybertiel ===
+overlay: cybertiel.yml
+alias: cyber-tiel-coder-35b
+vram_after_load_mib (used,total,free): 23248, 24463, 737
+cybertiel  | 0.16.264.325 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 184320, kv_unified = 'true'
+unused_mtp_tensors: 20  unused_mtp_bytes: 389400576 (371.4 MiB)
+  warmup: prompt 230 tok @ 760.7 t/s, gen 16 tok @ 151.1 t/s (prompt 302 ms, gen 99 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 273.2 t/s, gen 69 tok @ 155.4 t/s (prompt 106 ms, gen 438 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 66.6 t/s, gen 110 tok @ 155.7 t/s (prompt 60 ms, gen 700 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 155.56
+  decode_avg_prefill_t/s: 169.91
+  long-prefill: prompt 1860 tok @ 3703.6 t/s, gen 64 tok @ 154.5 t/s (prompt 502 ms, gen 408 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 23486, 24463, 499
+
+=== saluki ===
+overlay: saluki.yml
+alias: underdog-saluki-27b
+vram_after_load_mib (used,total,free): 14075, 24463, 9910
+saluki  | 0.04.123.353 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 184320, kv_unified = 'true'
+unused_mtp_tensors: 0  unused_mtp_bytes: 0 (0.0 MiB)
+  warmup: prompt 54 tok @ 159.7 t/s, gen 16 tok @ 52.8 t/s (prompt 338 ms, gen 284 ms; reasoning=?, visible=?)
+  decode[1]: prompt 29 tok @ 126.8 t/s, gen 103 tok @ 53.6 t/s (prompt 229 ms, gen 1903 ms; reasoning=?, visible=?)
+  decode[2]: prompt 4 tok @ 29.0 t/s, gen 128 tok @ 52.3 t/s (prompt 138 ms, gen 2430 ms; reasoning=?, visible=?)
+  decode_avg_gen_t/s: 52.92
+  decode_avg_prefill_t/s: 77.86
+  long-prefill: prompt 1860 tok @ 1406.8 t/s, gen 64 tok @ 52.4 t/s (prompt 1322 ms, gen 1201 ms; reasoning=?, visible=?)
+vram_after_requests_mib (used,total,free): 14372, 24463, 9613
+
+raw timings: /home/marcel/LLM/scripts/speed-results/raw-20261011-172718.jsonl
+summary: /home/marcel/LLM/scripts/speed-results/summary-20261011-172718.txt
+done.

@@ -1,12 +1,13 @@
-# Native BeeLlama.cpp for THIS machine.
+# Native llama.cpp (official ggml-org/llama.cpp master) for THIS machine.
 #
 #   GGML_NATIVE=ON          CPU backend with -march=native
-#   CMAKE_CUDA_ARCHITECTURES  only the host GPU (RTX 5090 Laptop = sm_120)
-#   GGML_CUDA_KVARN=ON      KVarN store + native CUDA FlashAttention
+#   CMAKE_CUDA_ARCHITECTURES  only the host GPU (RTX 5090 Laptop = sm_120;
+#                             upstream rewrites 120 -> 120a for the FP4 tensor cores)
 #   GGML_SCHED_MAX_COPIES=1 single-GPU: skip pipeline-parallel input copies (default 4)
 #
-# GGML_CUDA_FA_ALL_QUANTS compiles every standard pair and all 36 KVarN
-# ordered pairs (needed for kvarn6/kvarn6 plus the F16 precision tail).
+# GGML_CUDA_FA_ALL_QUANTS compiles every K/V pair for FlashAttention, so
+# mixed cache types (e.g. -ctk q8_0 -ctv q4_0) work. Plain q8_0/q8_0 and
+# f16/f16 are in the default set.
 #
 # --allow-shlib-undefined: CUDA VMM pool calls the driver API
 # (cuMemAddressFree etc.). libcuda.so only exists at runtime.
@@ -21,8 +22,8 @@ ARG CUDA_VERSION=13.3.1
 
 FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu${UBUNTU_VERSION} AS build
 
-ARG LLAMACPP_REPO=https://github.com/Anbeeld/beellama.cpp
-ARG LLAMACPP_REF=main
+ARG LLAMACPP_REPO=https://github.com/ggml-org/llama.cpp
+ARG LLAMACPP_REF=master
 ARG CUDA_DOCKER_ARCH=native
 ARG GGML_NATIVE=ON
 
@@ -32,25 +33,12 @@ RUN apt-get update && \
 
 ENV CC=gcc-14 CXX=g++-14 CUDAHOSTCXX=g++-14
 
+# Treeless clone: all commits (so the build number b<N> is right), trees and
+# blobs only for the checked-out ref.
 WORKDIR /app
-RUN git init -q . && \
-    git remote add origin ${LLAMACPP_REPO} && \
-    git fetch --depth 1 origin ${LLAMACPP_REF} && \
-    git checkout -q FETCH_HEAD && \
+RUN git clone -q --filter=tree:0 --no-checkout ${LLAMACPP_REPO} . && \
+    git checkout -q ${LLAMACPP_REF} && \
     git log -1 --oneline
-
-# SM120 dense-FP8 CUTLASS FFN does not compile with CUDA 13.3.1 + gcc-14
-# (Base::Arguments is not a class-name). Served GGUFs are NVFP4 / Q4_K_M.
-# BeeLlama may glob the .cu unconditionally; skip the file if present.
-RUN if [ -f ggml/src/ggml-cuda/fp8-cutlass-ffn-sm120.cu ]; then \
-        mv ggml/src/ggml-cuda/fp8-cutlass-ffn-sm120.cu \
-           ggml/src/ggml-cuda/fp8-cutlass-ffn-sm120.cu.skip; \
-    fi && \
-    if grep -q 'CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8 AND' \
-            ggml/src/ggml-cuda/CMakeLists.txt; then \
-        sed -i 's/if (CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8 AND/if (FALSE AND CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.8 AND/' \
-            ggml/src/ggml-cuda/CMakeLists.txt; \
-    fi
 
 RUN if [ "${CUDA_DOCKER_ARCH}" = "native" ] && ! command -v nvidia-smi >/dev/null 2>&1; then \
         echo "ERROR: CUDA_DOCKER_ARCH=native, but no GPU is visible inside the build container." >&2; \
@@ -64,12 +52,12 @@ RUN if [ "${CUDA_DOCKER_ARCH}" = "native" ] && ! command -v nvidia-smi >/dev/nul
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_DOCKER_ARCH} \
         -DGGML_CUDA_FA=ON \
         -DGGML_CUDA_FA_ALL_QUANTS=ON \
-        -DGGML_CUDA_KVARN=ON \
         -DGGML_SCHED_MAX_COPIES=1 \
         -DLLAMA_BUILD_TESTS=OFF \
+        -DLLAMA_BUILD_EXAMPLES=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_EXE_LINKER_FLAGS=-Wl,--allow-shlib-undefined . && \
-    cmake --build build --config Release -j$(nproc)
+    cmake --build build --config Release -j$(nproc) --target llama-server
 
 RUN mkdir -p /app/lib && \
     find build -name "*.so*" -exec cp -P {} /app/lib \;

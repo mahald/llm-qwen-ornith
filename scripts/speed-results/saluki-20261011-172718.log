@@ -1,0 +1,12 @@
+saluki  | warn: LLAMA_ARG_HOST environment variable is set, but will be overwritten by command line argument --host
+saluki  | warn: LLAMA_ARG_REASONING environment variable is set, but will be overwritten by command line argument --reasoning
+saluki  | warn: LLAMA_ARG_REASONING_EFFORT environment variable is set, but will be overwritten by command line argument --reasoning-effort
+saluki  | warn: LLAMA_ARG_REASONING_PRESERVE environment variable is set, but will be overwritten by command line argument --reasoning-preserve
+saluki  | 0.00.122.225 I srv  llama_server: initializing ...
+saluki  | 0.00.122.245 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+saluki  | 0.00.122.733 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+saluki  | 0.00.125.998 I srv    load_model: loading model '/models/Underdog-Saluki-27B-1.0-IQ2-mix.gguf'
+saluki  | 0.04.013.583 I cmn          init: llama threadpool init, n_threads = 4
+saluki  | 0.04.123.353 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 184320, kv_unified = 'true'
+saluki  | 0.04.125.900 I srv  llama_server: model loaded
+saluki  | 0.04.125.904 I srv  llama_server: listening on http://0.0.0.0:8080

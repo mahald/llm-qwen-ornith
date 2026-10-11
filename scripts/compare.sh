@@ -34,7 +34,9 @@ YML[qwen-uncensored]=qwen-uncensored.yml
 ALIAS[qwen-uncensored]=qwen3.8-27b-uncensored
 YML[cybertiel]=cybertiel.yml
 ALIAS[cybertiel]=cyber-tiel-coder-35b
-ALL_MODELS=(qwen qwen-uncensored cybertiel)
+YML[saluki]=saluki.yml
+ALIAS[saluki]=underdog-saluki-27b
+ALL_MODELS=(qwen qwen-uncensored cybertiel saluki)
 
 RESULTS_DIR="$ROOT/scripts/speed-results"
 mkdir -p "$RESULTS_DIR"
@@ -46,10 +48,10 @@ log() { printf '%s\n' "$*" | tee -a "$SUMMARY"; }
 
 down_all() {
     local y
-    for y in qwen.yml qwen-uncensored.yml cybertiel.yml; do
+    for y in qwen.yml qwen-uncensored.yml cybertiel.yml saluki.yml; do
         docker compose -f docker-compose.yml -f "$y" down --remove-orphans --timeout 20 >/dev/null 2>&1 || true
     done
-    docker rm -f qwen qwen-uncensored cybertiel llm-compare >/dev/null 2>&1 || true
+    docker rm -f qwen qwen-uncensored cybertiel saluki llm-compare >/dev/null 2>&1 || true
 }
 
 gpu_mem() {
@@ -82,18 +84,15 @@ fmt_timings() {
 import json, sys
 data = json.load(sys.stdin)
 t = data.get("timings") or {}
-u = (data.get("usage") or {}).get("completion_tokens_details") or {}
 print(
     "prompt {pn} tok @ {pps:.1f} t/s, gen {gn} tok @ {gps:.1f} t/s "
-    "(prompt {pms:.0f} ms, gen {gms:.0f} ms; reasoning={rt}, visible={vt})".format(
+    "(prompt {pms:.0f} ms, gen {gms:.0f} ms)".format(
         pn=t.get("prompt_n") or 0,
         pps=t.get("prompt_per_second") or 0.0,
         gn=t.get("predicted_n") or 0,
         gps=t.get("predicted_per_second") or 0.0,
         pms=t.get("prompt_ms") or 0.0,
         gms=t.get("predicted_ms") or 0.0,
-        rt=u.get("reasoning_tokens", "?"),
-        vt=u.get("visible_tokens", "?"),
     )
 )
 '
@@ -134,7 +133,7 @@ run_config() {
     docker compose -f docker-compose.yml -f "$yml" logs >"$logf" 2>&1
 
     log "vram_after_load_mib (used,total,free): $(gpu_mem)"
-    grep -E 'unused tensor|KVarN|kvarn|common_fit|n_ctx_slot|n_slots|cache type|kv-tail' "$logf" \
+    grep -E 'unused tensor|llama_kv_cache|fit|n_ctx_slot|n_slots|build:' "$logf" \
         | grep -v 'unused tensor' | head -20 | tee -a "$SUMMARY" || true
     python3 - "$logf" >>"$SUMMARY" <<'PY' || true
 import re, sys
@@ -195,12 +194,12 @@ else
 fi
 
 : >"$SUMMARY"
-log "BeeLlama.cpp  ${MODELS[*]}  (no MTP, kvarn6/kvarn6)"
+log "llama.cpp  ${MODELS[*]}  (no MTP, q8_0/q8_0)"
 log "stamp: $STAMP"
 log "gpu: $(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader)"
-log "image: $(docker image inspect beellama:native --format '{{.Id}} {{.Created}}')"
+log "image: $(docker image inspect llamacpp:native --format '{{.Id}} {{.Created}}')"
 log "decode prompt max_tokens=${DECODE_MAX_TOKENS} repeats=${DECODE_REPEATS}"
-log "MTP: off. -ctk/v kvarn6 --kv-tail-tokens 1024 --fit-target 1024. GGML_SCHED_MAX_COPIES=1."
+log "MTP: off. -c 184320 -ctk/v q8_0 --fit-target 1024. GGML_SCHED_MAX_COPIES=1."
 log "thinking: server default (xhigh). Same /v1/chat/completions path as pi."
 
 for m in "${MODELS[@]}"; do
@@ -214,4 +213,4 @@ log "summary: $SUMMARY"
 log "done."
 echo
 echo "Summary: $SUMMARY"
-echo "Stack is down. Start with ./llm qwen | qwen-uncensored | cybertiel"
+echo "Stack is down. Start with ./llm qwen | qwen-uncensored | cybertiel | saluki"

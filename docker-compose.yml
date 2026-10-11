@@ -2,6 +2,7 @@
 #   ./llm qwen
 #   ./llm qwen-uncensored
 #   ./llm cybertiel
+#   ./llm saluki
 #
 # One service, one GPU, one port. Switching overlays recreates the container.
 # NVIDIA Container Toolkit injects libcuda from the host driver (--gpus all).
@@ -11,7 +12,7 @@ name: llm
 
 services:
   llm:
-    image: beellama:native
+    image: llamacpp:native
     restart: unless-stopped
     ports:
       - "8080:8080"

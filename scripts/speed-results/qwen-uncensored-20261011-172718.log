@@ -1,0 +1,27 @@
+qwen-uncensored  | warn: LLAMA_ARG_HOST environment variable is set, but will be overwritten by command line argument --host
+qwen-uncensored  | warn: LLAMA_ARG_REASONING environment variable is set, but will be overwritten by command line argument --reasoning
+qwen-uncensored  | warn: LLAMA_ARG_REASONING_EFFORT environment variable is set, but will be overwritten by command line argument --reasoning-effort
+qwen-uncensored  | warn: LLAMA_ARG_REASONING_PRESERVE environment variable is set, but will be overwritten by command line argument --reasoning-preserve
+qwen-uncensored  | 0.00.117.543 I srv  llama_server: initializing ...
+qwen-uncensored  | 0.00.117.569 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+qwen-uncensored  | 0.00.118.213 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+qwen-uncensored  | 0.00.121.881 I srv    load_model: loading model '/models/Qwen3.8-27B-huihui-NVFP4.gguf'
+qwen-uncensored  | 0.00.717.836 W model has unused tensor blk.64.attn_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.840 W model has unused tensor blk.64.post_attention_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.845 W model has unused tensor blk.64.attn_q.weight (size = 125829120 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.847 W model has unused tensor blk.64.attn_k.weight (size = 10485760 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.848 W model has unused tensor blk.64.attn_v.weight (size = 10485760 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.854 W model has unused tensor blk.64.attn_output.weight (size = 62914560 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.855 W model has unused tensor blk.64.attn_q_norm.weight (size = 1024 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.857 W model has unused tensor blk.64.attn_k_norm.weight (size = 1024 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.858 W model has unused tensor blk.64.ffn_gate.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.860 W model has unused tensor blk.64.ffn_down.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.861 W model has unused tensor blk.64.ffn_up.weight (size = 178257920 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.864 W model has unused tensor blk.64.nextn.eh_proj.weight (size = 104857600 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.866 W model has unused tensor blk.64.nextn.enorm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.867 W model has unused tensor blk.64.nextn.hnorm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored  | 0.00.717.872 W model has unused tensor blk.64.nextn.shared_head_norm.weight (size = 20480 bytes) -- ignoring
+qwen-uncensored  | 0.11.784.563 I cmn          init: llama threadpool init, n_threads = 4
+qwen-uncensored  | 0.11.913.978 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 184320, kv_unified = 'true'
+qwen-uncensored  | 0.11.916.626 I srv  llama_server: model loaded
+qwen-uncensored  | 0.11.916.631 I srv  llama_server: listening on http://0.0.0.0:8080

@@ -4,7 +4,7 @@
 # The GGUF still contains blk.64 (BF16, 810 MiB); without --spec-type
 # llama-server ignores that whole block. 19.65 GB on disk / 18.80 GB loaded
 # — tighter than HIGH, still aims at 24 GB with --fit-target 1024.
-# 1 slot (-np 1), kvarn6/kvarn6 + 1024-token F16 tail.
+# 1 slot (-np 1), q8_0/q8_0 KV cache, 184320-token window.
 
 x-download:
   repo: renketong/Huihui-Qwen3.8-27B-abliterated-NVFP4-GGUF
@@ -21,10 +21,9 @@ services:
       --port 8080
       -ngl 99
       -np 1
-      -c 262144
-      -ctk kvarn6
-      -ctv kvarn6
-      --kv-tail-tokens 1024
+      -c 184320
+      -ctk q8_0
+      -ctv q8_0
       --kv-unified
       --flash-attn on
       --fit on

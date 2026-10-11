@@ -4,8 +4,8 @@
 # --spec-type llama-server ignores that whole block. 24 GB VRAM is not
 # enough for MTP + a useful KVarN cache.
 #
-# Dense 27B, 17.57 GB on disk / 17.35 GB loaded. kvarn6/kvarn6 + 1024-token
-# F16 tail. Fit keeps ~1 GB free (--fit-target 1024) on the RTX 5090 Laptop.
+# Dense 27B, 17.57 GB on disk / 17.35 GB loaded. q8_0/q8_0 KV cache, 184320-token
+# window. Fit keeps ~1 GB free (--fit-target 1024) on the RTX 5090 Laptop.
 # 1 slot (-np 1): a single pi agent, no parallel requests.
 
 x-download:
@@ -23,10 +23,9 @@ services:
       --port 8080
       -ngl 99
       -np 1
-      -c 262144
-      -ctk kvarn6
-      -ctv kvarn6
-      --kv-tail-tokens 1024
+      -c 184320
+      -ctk q8_0
+      -ctv q8_0
       --kv-unified
       --flash-attn on
       --fit on
