@@ -90,7 +90,7 @@ command:
 
 Put flag and value on the same line inside the `>` block (`-m /models/...`, `--fit-target 1024`). One flag per line. No quotes unless a value has spaces.
 
-`qwen-uncensored.yml` is the Huihui abliterated NVFP4 sibling (`container_name: qwen-uncensored`, alias `qwen3.8-27b-uncensored`, `-np 1`); MTP head in-file, unused. `cybertiel.yml` is the Huihui-abliterated Ornith-1.5 coder (`container_name: cybertiel`, `-np 1`, alias `cyber-tiel-coder-35b`, UD-Q4_K_XL); MTP stays off. `saluki.yml` is Underdog Saluki 27B 1.0 IQ2-mix (`container_name: saluki`, `-np 1`, alias `underdog-saluki-27b`, 7.9 GB, text only, no MTP block; the `mmproj-*` vision add-on is deliberately not downloaded).
+`qwen-uncensored.yml` is the Huihui abliterated NVFP4 sibling (`container_name: qwen-uncensored`, alias `qwen3.8-27b-uncensored`, `-np 1`); MTP head in-file, unused. `cybertiel.yml` is the Huihui-abliterated Ornith-1.5 coder (`container_name: cybertiel`, `-np 1`, alias `cyber-tiel-coder-35b`, UD-Q4_K_XL); MTP stays off. `saluki.yml` is Underdog Saluki 27B 1.0 IQ2-mix (`container_name: saluki`, `-np 1`, alias `underdog-saluki-27b`, 7.9 GB, text only, no MTP block; the `mmproj-*` vision add-on is deliberately not downloaded). Saluki is meant to also fit a 16 GB card: 14076 MiB after load, 15136 MiB peak at a 167k-token prompt (measured on the 24 GB card); keep it that way when touching `-c` or the cache types.
 
 ## Serving rules
 

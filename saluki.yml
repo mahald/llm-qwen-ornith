@@ -4,8 +4,13 @@
 # only: the mmproj vision add-on is not downloaded and --no-mmproj is set.
 # 7.9 GB on disk, no MTP block in the file.
 #
-# 1 slot (-np 1), q8_0/q8_0 KV cache, 184320-token window. Lots of VRAM
-# headroom: the weights are only ~7.4 GiB.
+# 1 slot (-np 1), q8_0/q8_0 KV cache, 184320-token window.
+#
+# Meant to run on a 16 GB graphics card as well: 14076 MiB used after load,
+# 15136 MiB peak with one 167k-token prompt (measured 2026-10-11 on the
+# 24 GB RTX 5090 Laptop, not on a real 16 GB card). That leaves ~1 GiB on a
+# 16 GB card, so nothing else may use its VRAM (no desktop on the same GPU).
+# If it gets tight: lower -c, or use -ctv q4_0 (FA_ALL_QUANTS is compiled in).
 
 x-download:
   repo: ConwayResearch/Underdog-Saluki-27B-1.0

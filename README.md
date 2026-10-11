@@ -65,6 +65,8 @@ Disk is the GGUF on disk (decimal GB). **Loaded** is what llama-server maps with
 
 Sources: [HIGH](https://huggingface.co/esatapedico/Qwen3.8-27B-NVFP4-MTP-GGUF) · [uncensored](https://huggingface.co/renketong/Huihui-Qwen3.8-27B-abliterated-NVFP4-GGUF) · [CyberTiel MTP](https://huggingface.co/peculiar-ragdoll/Cyber-Tiel-Coder-35B-A3B-GGUF-MTP) · [Saluki](https://huggingface.co/ConwayResearch/Underdog-Saluki-27B-1.0). Files: `Qwen3.8-27B-NVFP4-MTP-HIGH.gguf`, `Qwen3.8-27B-huihui-NVFP4.gguf`, `Cyber-Tiel-Coder-35B-A3B-MTP-UD-Q4_K_XL.gguf`, `Underdog-Saluki-27B-1.0-IQ2-mix.gguf`. The Saluki vision add-on (`mmproj-…`) is not downloaded; pi only sends text.
 
+**Saluki is meant to run on a 16 GB graphics card too.** At `-c 184320` with `q8_0` KV it used 14076 MiB after load and peaked at 15136 MiB on a 167k-token prompt (measured on the 24 GB card, not on a real 16 GB one) — about 1 GiB spare on 16 GB, provided nothing else uses that GPU's VRAM. If it gets tight, lower `-c` (and pi's `contextWindow` / `reserveTokens` with it) or use `-ctv q4_0`.
+
 ## No MTP
 
 **MTP stays off.** The three Qwen/CyberTiel GGUFs still contain the draft block (Saluki has none); it is only loaded with `--spec-type draft-mtp`. Without that flag llama-server skips the **whole extra block** (`blk.64` on the 27Bs, `blk.40` on CyberTiel) — not just the `nextn.*` tensors. Measured unused sizes: HIGH **215 MiB**, Huihui **810 MiB**, CyberTiel **371 MiB**. 24 GB is not enough for the head plus a useful KV cache.
