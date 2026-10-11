@@ -1,10 +1,7 @@
 # Shared stack. Model-specific command lives in the overlays:
 #   ./llm qwen
 #   ./llm qwen-uncensored
-#   ./llm superqwen
 #   ./llm cybertiel
-#   ./llm tiel
-#   ./llm genesis
 #
 # One service, one GPU, one port. Switching overlays recreates the container.
 # NVIDIA Container Toolkit injects libcuda from the host driver (--gpus all).

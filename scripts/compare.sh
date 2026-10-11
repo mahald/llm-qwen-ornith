@@ -3,7 +3,7 @@
 # MTP off. Uses the live compose overlays on port 8080 (the stack is stopped).
 #
 #   ./scripts/compare.sh                         # all overlays
-#   ./scripts/compare.sh superqwen tiel genesis  # subset
+#   ./scripts/compare.sh qwen cybertiel          # subset
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
@@ -32,17 +32,9 @@ YML[qwen]=qwen.yml
 ALIAS[qwen]=qwen3.8-27b
 YML[qwen-uncensored]=qwen-uncensored.yml
 ALIAS[qwen-uncensored]=qwen3.8-27b-uncensored
-YML[superqwen]=superqwen.yml
-ALIAS[superqwen]=superqwen3.8-27b
-YML[twinturbo]=twinturbo.yml
-ALIAS[twinturbo]=qwen3.8-27b-twin-turbo
 YML[cybertiel]=cybertiel.yml
 ALIAS[cybertiel]=cyber-tiel-coder-35b
-YML[tiel]=tiel.yml
-ALIAS[tiel]=tiel-coder-35b
-YML[genesis]=genesis.yml
-ALIAS[genesis]=tiel-coder-35b-genesis
-ALL_MODELS=(qwen qwen-uncensored superqwen twinturbo cybertiel tiel genesis)
+ALL_MODELS=(qwen qwen-uncensored cybertiel)
 
 RESULTS_DIR="$ROOT/scripts/speed-results"
 mkdir -p "$RESULTS_DIR"
@@ -54,10 +46,10 @@ log() { printf '%s\n' "$*" | tee -a "$SUMMARY"; }
 
 down_all() {
     local y
-    for y in qwen.yml qwen-uncensored.yml superqwen.yml twinturbo.yml cybertiel.yml tiel.yml genesis.yml; do
+    for y in qwen.yml qwen-uncensored.yml cybertiel.yml; do
         docker compose -f docker-compose.yml -f "$y" down --remove-orphans --timeout 20 >/dev/null 2>&1 || true
     done
-    docker rm -f qwen qwen-uncensored superqwen twinturbo ornith cybertiel tiel genesis llm-compare >/dev/null 2>&1 || true
+    docker rm -f qwen qwen-uncensored cybertiel llm-compare >/dev/null 2>&1 || true
 }
 
 gpu_mem() {
@@ -222,4 +214,4 @@ log "summary: $SUMMARY"
 log "done."
 echo
 echo "Summary: $SUMMARY"
-echo "Stack is down. Start with ./llm qwen | qwen-uncensored | superqwen | twinturbo | cybertiel | tiel | genesis"
+echo "Stack is down. Start with ./llm qwen | qwen-uncensored | cybertiel"
